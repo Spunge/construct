@@ -7,7 +7,10 @@ Main.prototype.init = function(canvas_id) {
 	this.world = new World(this.renderer);
 	
 	this.entities = [];
-	this.entities.push(new Point(this.world));
+	
+	for(var i = 0; i < 100; i++) {
+		this.entities.push(new Point(this.world));
+	}
 
 	return this;
 };
@@ -35,8 +38,6 @@ Main.prototype.cycle = function() {
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 	var main = new Main('canvas');
-
-	console.log(main);
 
 	window.requestAnimationFrame(main.cycle.bind(main));
 });
