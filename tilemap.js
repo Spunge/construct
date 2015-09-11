@@ -12,11 +12,15 @@ Tile.prototype.init = function() {
 
 Tile.prototype.add_entity = function(entity) {
 	this.entities.push(entity);
+	entity.occupied_tiles.push(this);
+
 	return this;
 };
 
 Tile.prototype.remove_entity = function(entity) {
-	this.entities.remvoe(entity);
+	this.entities.splice(this.entities.indexOf(entity), 1);
+	entity.occupied_tiles.splice(entity.occupied_tiles.indexOf(this), 1);
+
 	return this;
 };
  
@@ -71,16 +75,38 @@ Tilemap.prototype.render = function() {
 		};
 	}.bind(this);
 
-	var paint_tile = function(position) {
-		this.renderer.fill_rect(this.offset.x + position.x, this.offset.y + position.y, this.tile_size, this.tile_size, '#ffffff');
+	var paint_tile = function(tile, position) {
+		var color_int = tile.entities.length * 32 - 1;
+		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
+
+		this.renderer.fill_rect(this.offset.x + position.x, this.offset.y + position.y, this.tile_size, this.tile_size, color);
 		this.renderer.fill_rect(this.offset.x + position.x + 1, this.offset.y + position.y + 1, this.tile_size - 2, this.tile_size - 2, '#000000');
 	}.bind(this);
 
 	var position;
 
 	for(var i = 0; i < this.tiles.length; i++) {
-		paint_tile(get_tile_position(i));
+		paint_tile(this.tiles[i], get_tile_position(i));
 	}
 
 	return this;
+};
+
+Tilemap.prototype.get_occupied_tile = function(entity) {
+	var index =  Math.floor((entity.position.y - this.offset.y) / this.tile_size) * this.amounts.horizontal;
+	index += Math.floor((entity.position.x - this.offset.x) / this.tile_size);
+
+	return this.tiles[index];
+};
+
+Tilemap.prototype.add_entity = function(entity) {
+	this.get_occupied_tile(entity).add_entity(entity);
+};
+
+Tilemap.prototype.update_entity = function(entity) {
+	entity.occupied_tiles.forEach(function(tile) {
+		tile.remove_entity(entity);
+	});
+
+	this.get_occupied_tile(entity).add_entity(entity);
 };

@@ -10,7 +10,10 @@ Point.prototype.init = function(world) {
 	this.world = world;
 	this.renderer = world.renderer;
 
-	this.diameter = 10;
+	this.tilemap = world.tilemap;
+	this.occupied_tiles = [];
+
+	this.diameter = 4;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
@@ -18,12 +21,15 @@ Point.prototype.init = function(world) {
 		y: random(this.radius, this.world.height - this.radius),
 	};
 
+	var speed = 4;
 	this.velocity = {
-		x: random(-2, 2),
-		y: random(-2, 2),
+		x: random(speed * -1, speed),
+		y: random(speed * -1, speed),
 	};
 
-	this.color = '#ff0000';
+	this.color = '#33ff33';
+
+	this.tilemap.add_entity(this);
 
 	return this;
 };
@@ -33,6 +39,8 @@ Point.prototype.update = function() {
 
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;
+
+	this.tilemap.update_entity(this);
 };
 
 
@@ -73,5 +81,4 @@ Point.prototype.check_collisions_with_wall = function() {
 
 Point.prototype.render = function() {
 	this.renderer.fill_circ(this.position.x, this.position.y, this.radius, this.color);
-	//this.renderer.fill_rect(this.x, this.y, this.width, this.height, this.color);
 };
