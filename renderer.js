@@ -5,6 +5,7 @@ var Renderer = function(canvas_id) {
 Renderer.prototype.init = function(canvas_id) {
 	this.canvas = document.getElementById(canvas_id);
 	this.canvas.height = window.innerHeight;
+	 
 	this.canvas.width = window.innerWidth;
 
 	this.context = this.canvas.getContext('2d');
