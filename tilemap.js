@@ -76,11 +76,13 @@ Tilemap.prototype.render = function() {
 	}.bind(this);
 
 	var paint_tile = function(tile, position) {
-		var color_int = tile.entities.length * 32 - 1;
+		var color_int = tile.entities.length * 64 - 1;
 		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
 
+		console.log(color);
+
 		this.renderer.fill_rect(this.offset.x + position.x, this.offset.y + position.y, this.tile_size, this.tile_size, color);
-		this.renderer.fill_rect(this.offset.x + position.x + 1, this.offset.y + position.y + 1, this.tile_size - 2, this.tile_size - 2, '#000000');
+		this.renderer.fill_rect(this.offset.x + position.x + 2, this.offset.y + position.y + 2, this.tile_size - 4, this.tile_size - 4, '#000000');
 	}.bind(this);
 
 	var position;
@@ -92,21 +94,54 @@ Tilemap.prototype.render = function() {
 	return this;
 };
 
-Tilemap.prototype.get_occupied_tile = function(entity) {
-	var index =  Math.floor((entity.position.y - this.offset.y) / this.tile_size) * this.amounts.horizontal;
-	index += Math.floor((entity.position.x - this.offset.x) / this.tile_size);
+Tilemap.prototype.get_tile_at_position = function(position) {
+	var index =  Math.floor((position.y - this.offset.y) / this.tile_size) * this.amounts.horizontal;
+	index += Math.floor((position.x - this.offset.x) / this.tile_size);
 
-	return this.tiles[index];
+	return index;
 };
 
-Tilemap.prototype.add_entity = function(entity) {
-	this.get_occupied_tile(entity).add_entity(entity);
+Tilemap.prototype.get_occupied_tiles = function(entity) {
+	return [
+		this.get_tile_at_position({ x: entity.position.x + entity.radius, y: entity.position.y + entity.radius }),
+		this.get_tile_at_position({ x: entity.position.x + entity.radius, y: entity.position.y - entity.radius }),
+		this.get_tile_at_position({ x: entity.position.x - entity.radius, y: entity.position.y - entity.radius }),
+		this.get_tile_at_position({ x: entity.position.x - entity.radius, y: entity.position.y + entity.radius }),
+	]
+
+	.map(function(index) {
+		console.log(index);
+		return index;
+	})
+
+	.reduce(function(aggregate, index) {
+		if(aggregate.indexOf(index) === -1) {
+			aggregate.push(index);
+		}
+
+		return aggregate;
+	}, [])
+
+	.map(function(index) {
+		return this.tiles[index];
+	}.bind(this));
 };
 
-Tilemap.prototype.update_entity = function(entity) {
+Tilemap.prototype.remove_entity = function(entity) {
+	console.log('remove entity');
 	entity.occupied_tiles.forEach(function(tile) {
 		tile.remove_entity(entity);
 	});
+};
 
-	this.get_occupied_tile(entity).add_entity(entity);
+Tilemap.prototype.add_entity = function(entity) {
+	console.log('add entity');
+	this.get_occupied_tiles(entity).map(function(tile) {
+		tile.add_entity(entity);
+	});
+};
+
+Tilemap.prototype.update_entity = function(entity) {
+	this.remove_entity(entity);
+	this.add_entity(entity);
 };

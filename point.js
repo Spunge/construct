@@ -13,7 +13,7 @@ Point.prototype.init = function(world) {
 	this.tilemap = world.tilemap;
 	this.occupied_tiles = [];
 
-	this.diameter = 4;
+	this.diameter = 40;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
@@ -21,13 +21,13 @@ Point.prototype.init = function(world) {
 		y: random(this.radius, this.world.height - this.radius),
 	};
 
-	var speed = 4;
+	var speed = 1;
 	this.velocity = {
 		x: random(speed * -1, speed),
 		y: random(speed * -1, speed),
 	};
 
-	this.color = '#33ff33';
+	this.color = '#ff0000';
 
 	this.tilemap.add_entity(this);
 

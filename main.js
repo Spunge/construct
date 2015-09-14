@@ -8,7 +8,7 @@ Main.prototype.init = function(canvas_id) {
 	
 	this.entities = [];
 	
-	for(var i = 0; i < 800; i++) {
+	for(var i = 0; i < 1; i++) {
 		this.entities.push(new Point(this.world));
 	}
 
@@ -33,7 +33,7 @@ Main.prototype.cycle = function() {
 	this.update();
 	this.render();
 
-	window.requestAnimationFrame(this.cycle.bind(this));
+	//window.requestAnimationFrame(this.cycle.bind(this));
 };
 
 document.addEventListener("DOMContentLoaded", function(event) { 
