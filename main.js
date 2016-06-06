@@ -35,6 +35,7 @@ Main.prototype.cycle = function() {
 	this.render();
 	this.update();
 
+	//setTimeout(this.cycle.bind(this), 500);
 	window.requestAnimationFrame(this.cycle.bind(this));
 };
 

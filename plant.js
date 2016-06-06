@@ -5,7 +5,8 @@ var Plant = function(world) {
 	this.set_size(4);
 
 	// Get a random tile
-	var index = Math.floor(Math.random() * this.tilemap.tiles.length);
+	//var index = Math.floor(Math.random() * this.tilemap.tiles.length);
+	var index = Math.floor(Math.random() * this.tilemap.amounts.horizontal + (this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
 	var position = this.tilemap.tiles[index].position;
 
 	// Plant plant there
