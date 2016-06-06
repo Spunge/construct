@@ -14,6 +14,14 @@ var Point = function(world) {
 		y: random(this.radius, this.world.height - this.radius),
 	};
 
+	// Where to collide
+	this.boundaries = {
+		top: this.radius,
+		right: this.world.width - this.radius,
+		bottom: this.world.height - this.radius,
+		left: this.radius,
+	};
+
 	var speed = random(0.5, 1.5) * world.speed;
 	this.velocity = {
 		x: random(speed * -1, speed),
@@ -58,6 +66,16 @@ Point.prototype.update_tilemap = function() {
 	return this;
 };
 
+Point.prototype.collide_horizontal = function(new_position, boundary) {
+	this.position.y += (this.velocity.y - (new_position.y - boundary));
+	this.velocity.y *= -1;
+};
+
+Point.prototype.collide_vertical = function(new_position, boundary) {
+	this.position.x += (this.velocity.x - (new_position.x - boundary));
+	this.velocity.x *= -1;
+};
+
 Point.prototype.check_collisions_with_wall = function() {
 	// Where we'd be if everything goes swifty
 	var new_position = {
@@ -65,31 +83,17 @@ Point.prototype.check_collisions_with_wall = function() {
 		y: this.position.y + this.velocity.y,
 	};
 
-	// Where to collide
-	var boundaries = {
-		top: this.radius,
-		right: this.world.width - this.radius,
-		bottom: this.world.height - this.radius,
-		left: this.radius,
-	};
-
-	// Actual collision calculation that checks if we moved to far 
-	var collide = function(axis, side) {
-		this.position[axis] += (this.velocity[axis] - (new_position[axis] - boundaries[side]));
-		this.velocity[axis] *= -1;
-	}.bind(this);
-
-	if(new_position.x > boundaries.right) {
-		collide('x', 'right');
+	if(new_position.x > this.boundaries.right) {
+		this.collide_vertical(new_position, this.boundaries.right);
 	}
-	if(new_position.x < boundaries.left) {
-		collide('x', 'left');
+	if(new_position.x < this.boundaries.left) {
+		this.collide_vertical(new_position, this.boundaries.left);
 	}
-	if(new_position.y < boundaries.top) {
-		collide('y', 'top');
+	if(new_position.y < this.boundaries.top) {
+		this.collide_horizontal(new_position, this.boundaries.top);
 	}
-	if(new_position.y > boundaries.bottom) {
-		collide('y', 'bottom');
+	if(new_position.y > this.boundaries.bottom) {
+		this.collide_horizontal(new_position, this.boundaries.bottom);
 	}
 };
 
