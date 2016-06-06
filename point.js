@@ -39,17 +39,21 @@ Point.prototype.update = function() {
 	this.update_tilemap();
 };
 
+function remove_entity_from_tile(tile, entity) {
+	tile.remove_entity(entity);
+}
+
 Point.prototype.update_tilemap = function() {
-	this.occupied_tiles.forEach(function(tile) {
-		tile.remove_entity(this);
-	}.bind(this));
+	// Remove this entity from all tiles it occupies
+	for(var i = 0; i < this.occupied_tiles.length; i++) {
+		this.occupied_tiles[i].remove_entity(this);
+	}
 
-	this.occupied_tiles = [];
+	this.occupied_tiles = this.tilemap.get_tiles_in_radius_of_position(this.position, this.radius);
 
-	this.tilemap.get_tiles_in_radius_of_position(this.position, this.radius).map(function(tile) {
-		tile.add_entity(this);
-		this.occupied_tiles.push(tile);
-	}.bind(this));
+	for(i = 0; i < this.occupied_tiles.length; i++) {
+		this.occupied_tiles[i].add_entity(this);
+	}
 
 	return this;
 };

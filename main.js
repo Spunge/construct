@@ -16,17 +16,17 @@ Main.prototype.init = function(canvas_id) {
 };
 
 Main.prototype.update = function() {
-	this.entities.forEach(function(entity) {
-		entity.update();
-	});
+	for(var i = 0; i < this.entities.length; i++) {
+		this.entities[i].update();
+	}
 };
 
 Main.prototype.render = function() {
 	this.world.render();
 
-	this.entities.forEach(function(entity) {
-		entity.render();
-	});
+	for(var i = 0; i < this.entities.length; i++) {
+		this.entities[i].render();
+	}
 };
 
 Main.prototype.cycle = function() {

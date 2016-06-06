@@ -69,17 +69,14 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	var bottom_right = this.get_tile_index_at_position({ x: position.x + radius, y: position.y + radius });
 
 	// Array of indexes tile occupies
-	var indexes = [];
+	var tiles = [];
 
 	// Loop each y axis and x axis starting at top_left moving to bottom_right
 	for(var y = Math.floor(top_left / this.amounts.horizontal); y <= Math.floor(bottom_right / this.amounts.horizontal); y++) {
 		for(var x = top_left % this.amounts.horizontal; x <= bottom_right % this.amounts.horizontal; x++) {
-			indexes.push((y * this.amounts.horizontal) + x);
+			tiles.push(this.tiles[(y * this.amounts.horizontal) + x]);
 		}
 	}
 
-	// Return tiles at indexes
-	return indexes.map(function(index) {
-		return this.tiles[index];
-	}.bind(this));
+	return tiles;
 };
