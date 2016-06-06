@@ -1,31 +1,26 @@
-function random(min, max) {
-	return Math.random() * (max - min) + min;
-}
-
 var Animal = function(world) {
+	// Create animal with random pos
 	Entity.call(this, world);
 
-	this.diameter = random(5, 50);
-	//this.diameter = 30;
-	this.radius = this.diameter / 2;
-	
-	this.position = {
-		x: random(this.radius, this.world.width - this.radius),
-		y: random(this.radius, this.world.height - this.radius),
-	};
+	this.set_size(Util.random(5, 50));
+
+	this.set_position({
+		x: Util.random(this.half_size, world.width - this.half_size),
+		y: Util.random(this.half_size, world.height - this.half_size),
+	});
 
 	// Where to collide
 	this.boundaries = {
-		top: this.radius,
-		right: this.world.width - this.radius,
-		bottom: this.world.height - this.radius,
-		left: this.radius,
+		top: this.half_size,
+		right: this.world.width - this.half_size,
+		bottom: this.world.height - this.half_size,
+		left: this.half_size,
 	};
 
-	var speed = random(0.5, 1.5) * world.speed;
+	var speed = Util.random(0.5, 1.5) * world.speed;
 	this.velocity = {
-		x: random(speed * -1, speed),
-		y: random(speed * -1, speed),
+		x: Util.random(speed * -1, speed),
+		y: Util.random(speed * -1, speed),
 	};
 
 	this.update_tilemap();
@@ -50,21 +45,6 @@ Animal.prototype.update = function() {
 function remove_entity_from_tile(tile, entity) {
 	tile.remove_entity(entity);
 }
-
-Animal.prototype.update_tilemap = function() {
-	// Remove this entity from all tiles it occupies
-	for(var i = 0; i < this.occupied_tiles.length; i++) {
-		this.occupied_tiles[i].remove_entity(this);
-	}
-
-	this.occupied_tiles = this.tilemap.get_tiles_in_radius_of_position(this.position, this.radius);
-
-	for(i = 0; i < this.occupied_tiles.length; i++) {
-		this.occupied_tiles[i].add_entity(this);
-	}
-
-	return this;
-};
 
 Animal.prototype.collide_horizontal = function(new_position, boundary) {
 	this.position.y += (this.velocity.y - (new_position.y - boundary));
@@ -98,5 +78,5 @@ Animal.prototype.check_collisions_with_wall = function() {
 };
 
 Animal.prototype.render = function() {
-	this.renderer.fill_circ(this.position.x, this.position.y, this.radius, this.color);
+	this.renderer.fill_circ(this.position.x, this.position.y, this.half_size, this.color);
 };

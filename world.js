@@ -4,7 +4,7 @@ var World = function(renderer) {
 
 World.prototype.init = function(renderer) {
 	this.renderer = renderer;
-	this.speed = 1;
+	this.speed = 10;
 	this.width = renderer.canvas.width;
 	this.height = renderer.canvas.height;
 

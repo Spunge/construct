@@ -74,7 +74,12 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	// Loop each y axis and x axis starting at top_left moving to bottom_right
 	for(var y = Math.floor(top_left / this.amounts.horizontal); y <= Math.floor(bottom_right / this.amounts.horizontal); y++) {
 		for(var x = top_left % this.amounts.horizontal; x <= bottom_right % this.amounts.horizontal; x++) {
-			tiles.push(this.tiles[(y * this.amounts.horizontal) + x]);
+			// Calculate index of possible occupied tile
+			var index = (y * this.amounts.horizontal) + x;
+			// Check if this index is a valid tile
+			if(index >= 0 && index < this.tiles.length) {
+				tiles.push(this.tiles[index]);
+			}
 		}
 	}
 
