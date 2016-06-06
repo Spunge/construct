@@ -98,26 +98,22 @@ Tilemap.prototype.get_tile_at_position = function(position) {
 };
 
 Tilemap.prototype.get_occupied_tiles = function(entity) {
-	return [
-		this.get_tile_at_position({ x: entity.position.x + entity.radius, y: entity.position.y + entity.radius }),
-		this.get_tile_at_position({ x: entity.position.x + entity.radius, y: entity.position.y - entity.radius }),
-		this.get_tile_at_position({ x: entity.position.x - entity.radius, y: entity.position.y - entity.radius }),
-		this.get_tile_at_position({ x: entity.position.x - entity.radius, y: entity.position.y + entity.radius }),
-	]
+	// Get tile indexes
+	var top_left = this.get_tile_at_position({ x: entity.position.x - entity.radius, y: entity.position.y - entity.radius });
+	var bottom_right = this.get_tile_at_position({ x: entity.position.x + entity.radius, y: entity.position.y + entity.radius });
 
-	.map(function(index) {
-		return index;
-	})
+	// Array of indexes tile occupies
+	var indexes = [];
 
-	.reduce(function(aggregate, index) {
-		if(aggregate.indexOf(index) === -1) {
-			aggregate.push(index);
+	// Loop each y axis and x axis starting at top_left moving to bottom_right
+	for(var y = Math.floor(top_left / this.amounts.horizontal); y <= Math.floor(bottom_right / this.amounts.horizontal); y++) {
+		for(var x = top_left % this.amounts.horizontal; x <= bottom_right % this.amounts.horizontal; x++) {
+			indexes.push((y * this.amounts.horizontal) + x);
 		}
+	}
 
-		return aggregate;
-	}, [])
-
-	.map(function(index) {
+	// Return tiles at indexes
+	return indexes.map(function(index) {
 		return this.tiles[index];
 	}.bind(this));
 };

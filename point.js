@@ -13,8 +13,8 @@ Point.prototype.init = function(world) {
 	this.tilemap = world.tilemap;
 	this.occupied_tiles = [];
 
-	this.diameter = 30 * Math.random() + 10;
-	//this.diameter = 40;
+	this.diameter = 60 * Math.random() + 10;
+	//this.diameter = 10;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
