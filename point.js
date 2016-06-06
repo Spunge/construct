@@ -13,7 +13,8 @@ Point.prototype.init = function(world) {
 	this.tilemap = world.tilemap;
 	this.occupied_tiles = [];
 
-	this.diameter = 40;
+	this.diameter = 30 * Math.random() + 10;
+	//this.diameter = 40;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
@@ -21,7 +22,7 @@ Point.prototype.init = function(world) {
 		y: random(this.radius, this.world.height - this.radius),
 	};
 
-	var speed = 1;
+	var speed = (Math.random() * 2 + 0.5) * world.speed;
 	this.velocity = {
 		x: random(speed * -1, speed),
 		y: random(speed * -1, speed),
@@ -42,7 +43,6 @@ Point.prototype.update = function() {
 
 	this.tilemap.update_entity(this);
 };
-
 
 Point.prototype.check_collisions_with_wall = function() {
 	// Where we'd be if everything goes swifty

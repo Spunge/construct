@@ -15,7 +15,7 @@ Renderer.prototype.init = function(canvas_id) {
 
 Renderer.prototype.fill_rect = function(x, y, width, height, color) {
 	this.context.fillStyle = color || '#000000';
-	this.context.fillRect(x, y, width, height);
+	this.context.fillRect(x - width / 2, y - height / 2, width, height);
 };
 
 Renderer.prototype.fill_circ = function(x, y, radius, color) {

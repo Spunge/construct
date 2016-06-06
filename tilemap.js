@@ -12,14 +12,12 @@ Tile.prototype.init = function() {
 
 Tile.prototype.add_entity = function(entity) {
 	this.entities.push(entity);
-	entity.occupied_tiles.push(this);
 
 	return this;
 };
 
 Tile.prototype.remove_entity = function(entity) {
 	this.entities.splice(this.entities.indexOf(entity), 1);
-	entity.occupied_tiles.splice(entity.occupied_tiles.indexOf(this), 1);
 
 	return this;
 };
@@ -70,8 +68,8 @@ Tilemap.prototype.render = function() {
 	// Get tile coords from position in tiles array
 	var get_tile_position = function(i) {
 		return {
-			x: (i % this.amounts.horizontal) * this.tile_size,
-			y: Math.floor(i / this.amounts.horizontal) * this.tile_size,
+			x: (i % this.amounts.horizontal) * this.tile_size + this.tile_size / 2,
+			y: Math.floor(i / this.amounts.horizontal) * this.tile_size + this.tile_size / 2,
 		};
 	}.bind(this);
 
@@ -79,10 +77,8 @@ Tilemap.prototype.render = function() {
 		var color_int = tile.entities.length * 64 - 1;
 		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
 
-		console.log(color);
-
 		this.renderer.fill_rect(this.offset.x + position.x, this.offset.y + position.y, this.tile_size, this.tile_size, color);
-		this.renderer.fill_rect(this.offset.x + position.x + 2, this.offset.y + position.y + 2, this.tile_size - 4, this.tile_size - 4, '#000000');
+		this.renderer.fill_rect(this.offset.x + position.x, this.offset.y + position.y, this.tile_size - 4, this.tile_size - 4, '#000000');
 	}.bind(this);
 
 	var position;
@@ -110,7 +106,6 @@ Tilemap.prototype.get_occupied_tiles = function(entity) {
 	]
 
 	.map(function(index) {
-		console.log(index);
 		return index;
 	})
 
@@ -128,16 +123,17 @@ Tilemap.prototype.get_occupied_tiles = function(entity) {
 };
 
 Tilemap.prototype.remove_entity = function(entity) {
-	console.log('remove entity');
 	entity.occupied_tiles.forEach(function(tile) {
 		tile.remove_entity(entity);
 	});
+
+	entity.occupied_tiles = [];
 };
 
 Tilemap.prototype.add_entity = function(entity) {
-	console.log('add entity');
 	this.get_occupied_tiles(entity).map(function(tile) {
 		tile.add_entity(entity);
+		entity.occupied_tiles.push(tile);
 	});
 };
 
