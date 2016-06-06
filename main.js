@@ -9,7 +9,7 @@ Main.prototype.init = function(canvas_id) {
 	this.entities = [];
 	
 	for(var i = 0; i < 10; i++) {
-		this.entities.push(new Point(this.world));
+		this.entities.push(new Animal(this.world));
 	}
 
 	return this;

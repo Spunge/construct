@@ -2,11 +2,11 @@ function random(min, max) {
 	return Math.random() * (max - min) + min;
 }
 
-var Point = function(world) {
+var Animal = function(world) {
 	Entity.call(this, world);
 
-	//this.diameter = random(10, 100);
-	this.diameter = 30;
+	this.diameter = random(5, 50);
+	//this.diameter = 30;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
@@ -35,10 +35,10 @@ var Point = function(world) {
 	return this;
 };
 
-Point.prototype = Object.create(Entity.prototype);
-Point.prototype.constructor = Point;
+Animal.prototype = Object.create(Entity.prototype);
+Animal.prototype.constructor = Animal;
 
-Point.prototype.update = function() {
+Animal.prototype.update = function() {
 	this.check_collisions_with_wall();
 
 	this.position.x += this.velocity.x;
@@ -51,7 +51,7 @@ function remove_entity_from_tile(tile, entity) {
 	tile.remove_entity(entity);
 }
 
-Point.prototype.update_tilemap = function() {
+Animal.prototype.update_tilemap = function() {
 	// Remove this entity from all tiles it occupies
 	for(var i = 0; i < this.occupied_tiles.length; i++) {
 		this.occupied_tiles[i].remove_entity(this);
@@ -66,17 +66,17 @@ Point.prototype.update_tilemap = function() {
 	return this;
 };
 
-Point.prototype.collide_horizontal = function(new_position, boundary) {
+Animal.prototype.collide_horizontal = function(new_position, boundary) {
 	this.position.y += (this.velocity.y - (new_position.y - boundary));
 	this.velocity.y *= -1;
 };
 
-Point.prototype.collide_vertical = function(new_position, boundary) {
+Animal.prototype.collide_vertical = function(new_position, boundary) {
 	this.position.x += (this.velocity.x - (new_position.x - boundary));
 	this.velocity.x *= -1;
 };
 
-Point.prototype.check_collisions_with_wall = function() {
+Animal.prototype.check_collisions_with_wall = function() {
 	// Where we'd be if everything goes swifty
 	var new_position = {
 		x: this.position.x + this.velocity.x,
@@ -97,6 +97,6 @@ Point.prototype.check_collisions_with_wall = function() {
 	}
 };
 
-Point.prototype.render = function() {
+Animal.prototype.render = function() {
 	this.renderer.fill_circ(this.position.x, this.position.y, this.radius, this.color);
 };
