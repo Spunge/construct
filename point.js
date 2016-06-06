@@ -3,18 +3,10 @@ function random(min, max) {
 }
 
 var Point = function(world) {
-	return this.init(world);
-};
+	Entity.call(this, world);
 
-Point.prototype.init = function(world) {
-	this.world = world;
-	this.renderer = world.renderer;
-
-	this.tilemap = world.tilemap;
-	this.occupied_tiles = [];
-
-	this.diameter = 60 * Math.random() + 10;
-	//this.diameter = 10;
+	//this.diameter = random(10, 100);
+	this.diameter = 30;
 	this.radius = this.diameter / 2;
 	
 	this.position = {
@@ -22,18 +14,21 @@ Point.prototype.init = function(world) {
 		y: random(this.radius, this.world.height - this.radius),
 	};
 
-	var speed = (Math.random() * 2 + 0.5) * world.speed;
+	var speed = random(0.5, 1.5) * world.speed;
 	this.velocity = {
 		x: random(speed * -1, speed),
 		y: random(speed * -1, speed),
 	};
 
-	this.color = '#ff0000';
+	this.update_tilemap();
 
-	this.tilemap.add_entity(this);
+	this.color = '#ff0000';
 
 	return this;
 };
+
+Point.prototype = Object.create(Entity.prototype);
+Point.prototype.constructor = Point;
 
 Point.prototype.update = function() {
 	this.check_collisions_with_wall();
@@ -41,7 +36,22 @@ Point.prototype.update = function() {
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;
 
-	this.tilemap.update_entity(this);
+	this.update_tilemap();
+};
+
+Point.prototype.update_tilemap = function() {
+	this.occupied_tiles.forEach(function(tile) {
+		tile.remove_entity(this);
+	}.bind(this));
+
+	this.occupied_tiles = [];
+
+	this.tilemap.get_tiles_in_radius_of_position(this.position, this.radius).map(function(tile) {
+		tile.add_entity(this);
+		this.occupied_tiles.push(tile);
+	}.bind(this));
+
+	return this;
 };
 
 Point.prototype.check_collisions_with_wall = function() {
