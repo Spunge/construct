@@ -35,12 +35,17 @@ Main.prototype.cycle = function() {
 	this.render();
 	this.update();
 
-	//setTimeout(this.cycle.bind(this), 500);
-	window.requestAnimationFrame(this.cycle.bind(this));
+	//setTimeout(this.cycle.bind(this), 1000);
+	//window.requestAnimationFrame(this.cycle.bind(this));
 };
 
+var main;
 document.addEventListener("DOMContentLoaded", function(event) { 
-	var main = new Main('canvas');
+	main = new Main('canvas');
 
 	window.requestAnimationFrame(main.cycle.bind(main));
+});
+
+document.addEventListener('click', function() {
+	main.cycle();
 });

@@ -63,6 +63,18 @@ Tilemap.prototype.get_tile_index_at_position = function(position) {
 	return index;
 };
 
+Tilemap.prototype.get_correct_index = function(index, amount) {
+	if(index < 0) {
+		return amount + index;
+	}
+
+	if(index >= amount) {
+		return index - amount;
+	}
+
+	return index;
+};
+
 Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	// Get tile indexes
 	var top_left = this.get_tile_index_at_position({ x: position.x - radius, y: position.y - radius });
@@ -70,32 +82,61 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 
 	// Array of indexes tile occupies
 	var tiles = [];
+	console.log('loop');
 
-	// Loop each y axis and x axis starting at top_left moving to bottom_right
-	for(var y = Math.floor(top_left / this.amounts.horizontal); y <= Math.floor(bottom_right / this.amounts.horizontal); y++) {
-		if(y < 0) {
-			top_left += this.amounts.horizontal;
-			continue;
-		}
+	for(var index = top_left; index <= bottom_right; index += this.amounts.horizontal) {
+		var start = this.get_correct_index(top_left % this.amounts.horizontal, this.amounts.horizontal);
+		var end = this.get_correct_index(bottom_right % this.amounts.horizontal, this.amounts.horizontal);
+		var max_delta = end - start;
 
-		if(y >= this.amounts.vertical) {
-			bottom_right -= this.amounts.horizontal;
-			continue;
-		}
+		console.log(end, start, max_delta);
 
-		for(var x = top_left % this.amounts.horizontal; x <= bottom_right % this.amounts.horizontal; x++) {
-			if(x < 0 || x >= this.amounts.horizontal) {
-				continue;
-			}
-
-			// Calculate index of possible occupied tile
-			var index = (y * this.amounts.horizontal) + x;
-			// Check if this index is a valid tile
-			if(index >= 0 && index < this.tiles.length) {
-				tiles.push(this.tiles[index]);
-			}
+		for(var delta = 0; delta <= max_delta;  delta++) {
+			//console.log(index, delta);
+			tiles.push(this.tiles[this.get_correct_index(index + delta, this.tiles.length)]);
 		}
 	}
+
+	/*
+	for(var index = top_left; index <= bottom_right; index++) {
+		var x_min = top_left % this.amounts.horizontal;
+		var x_max = bottom_right % this.amounts.horizontal;
+		console.log(x_min, x_max, index);
+
+		tiles.push(this.tiles[get_correct_index(index, this.tiles.length)]);
+
+		if(index % this.amounts.horizontal >= x_max) {
+			index += this.amounts.horizontal - (x_max - x_min) - 1;
+			continue;
+		}
+	}
+	*/
+
+	/*
+	// Loop each y axis and x axis starting at top_left moving to bottom_right
+	for(var y = Math.floor(top_left / this.amounts.horizontal); y <= Math.floor(bottom_right / this.amounts.horizontal); y++) {
+		var y_index = get_correct_index(y, this.amounts.vertical);
+
+		for(var x = get_correct_index(top_left % this.amounts.horizontal, this.amounts.horizontal); x <= bottom_right % this.amounts.horizontal; x++) {
+			var x_index = get_correct_index(x, this.amounts.horizontal);
+
+			//var index = (y_index * this.amounts.horizontal) + x_index;
+
+			var index = get_correct_index(y * this.amounts.horizontal + x, this.tiles.length);
+			console.log(index);
+
+			//if(index < 0) {
+				//index = this.tiles.length + index;
+			//}
+			//if(index >= this.tiles.length) {
+				//index = index - this.tiles.length;
+			//}
+
+			// Add tile when we should
+			tiles.push(this.tiles[index]);
+		}
+	}
+	*/
 
 	return tiles;
 };

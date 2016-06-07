@@ -2,11 +2,18 @@
 var Plant = function(world) {
 	Entity.call(this, world);
 
-	this.set_size(4);
+	this.set_size(7.48);
 
 	// Get a random tile
 	//var index = Math.floor(Math.random() * this.tilemap.tiles.length);
-	var index = Math.floor(Math.random() * this.tilemap.amounts.horizontal + (this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
+	// Bottom left
+	//var index = Math.floor(1 + (this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
+	// Top left
+	var index = Math.floor(1 + this.tilemap.amounts.horizontal);
+	// Bottom right
+	//var index = Math.floor(this.tilemap.tiles.length - this.tilemap.amounts.horizontal - 2);
+	// Center top
+	//var index = Math.floor(Math.round(this.tilemap.amounts.horizontal / 2) + this.tilemap.amounts.horizontal);
 	var position = this.tilemap.tiles[index].position;
 
 	// Plant plant there

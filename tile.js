@@ -10,6 +10,7 @@ Tile.prototype.init = function(tilemap, position) {
 	this.renderer = tilemap.renderer;
 	this.position = position;
 	this.entities = [];
+	this.luminescence = 100;
 
 	return this;
 };
@@ -29,7 +30,7 @@ Tile.prototype.remove_entity = function(entity) {
 Tile.prototype.render = function() {
 	// Only paint when entities on tile
 	if(this.entities.length) {
-		var color_int = this.entities.length * 32 - 1;
+		var color_int = this.entities.length * this.luminescence;
 
 		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
 
