@@ -82,19 +82,29 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 
 	// Array of indexes tile occupies
 	var tiles = [];
-	console.log('loop');
+	//console.log('loop');
 
-	for(var index = top_left; index <= bottom_right; index += this.amounts.horizontal) {
+	console.log(this.amounts.horizontal, this.amounts.vertical);
+	console.log(top_left, bottom_right);
+
+	var start_x = top_left % this.amounts.horizontal;
+	var end_x = bottom_right % this.amounts.horizontal;
+
+	var start_y = Math.floor((top_left + start_x) / this.amounts.horizontal) % this.amounts.vertical;
+	var end_y = Math.floor((bottom_right - end_x) / this.amounts.horizontal) % this.amounts.vertical;
+
+	console.log(start_y, end_y, start_x, end_x);
+
+	for(var y = start_y; y % this.amounts.vertical != end_y; y++) {
 		//var start = this.get_correct_index(top_left % this.amounts.horizontal, this.amounts.horizontal);
 		//var end = this.get_correct_index(bottom_right % this.amounts.horizontal, this.amounts.horizontal);
-		var start = top_left % this.amounts.horizontal;
-		var end = bottom_right % this.amounts.horizontal;
 
-		console.log(start, end, max_delta);
-
-		for(var delta = 0; delta <= max_delta;  delta++) {
+		for(var x = start_x; x % this.amounts.horizontal != end_x; x++) {
+			//var index = (y + 1) * this.amounts.horizontal + (x + 1);
+			var index = y * this.amounts.horizontal + x;
+			//console.log(index);
 			//console.log(index, delta);
-			tiles.push(this.tiles[this.get_correct_index(index + delta, this.tiles.length)]);
+			tiles.push(this.tiles[this.get_correct_index(index, this.tiles.length)]);
 		}
 	}
 

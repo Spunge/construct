@@ -7,9 +7,9 @@ var Plant = function(world) {
 	// Get a random tile
 	//var index = Math.floor(Math.random() * this.tilemap.tiles.length);
 	// Bottom left
-	//var index = Math.floor(1 + (this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
+	var index = Math.floor(1 + (this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
 	// Top left
-	var index = Math.floor(1 + this.tilemap.amounts.horizontal);
+	//var index = Math.floor(1 + this.tilemap.amounts.horizontal);
 	// Bottom right
 	//var index = Math.floor(this.tilemap.tiles.length - this.tilemap.amounts.horizontal - 2);
 	// Center top
