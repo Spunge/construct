@@ -10,7 +10,7 @@ Tile.prototype.init = function(tilemap, position) {
 	this.renderer = tilemap.renderer;
 	this.position = position;
 	this.entities = [];
-	this.luminescence = 100;
+	this.luminescence = 64;
 
 	return this;
 };
