@@ -76,6 +76,9 @@ Tilemap.prototype.get_correct_index = function(index, amount) {
 };
 
 Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
+
+	/*
+
 	// Get tile indexes
 	var top_left = this.get_tile_index_at_position({ x: position.x - radius, y: position.y - radius });
 	var bottom_right = this.get_tile_index_at_position({ x: position.x + radius, y: position.y + radius });
@@ -84,9 +87,22 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	var tiles = [];
 	//console.log('loop');
 
-	console.log(this.amounts.horizontal, this.amounts.vertical);
+	//console.log(this.amounts.horizontal, this.amounts.vertical);
+	//console.log(top_left, bottom_right);
+
+	var start_x = top_left % this.amounts.horizontal;
+	var end_x = bottom_right % this.amounts.horizontal;
+
 	console.log(top_left, bottom_right);
 
+	var width = (bottom_right - top_left) % this.amounts.horizontal;
+
+	for(var i = 0; i <= width; i++) {
+		tiles.push(this.tiles[this.get_correct_index(top_left + i, this.tiles.length)]);
+	}
+	*/
+
+	/*
 	var start_x = top_left % this.amounts.horizontal;
 	var end_x = bottom_right % this.amounts.horizontal;
 
@@ -107,6 +123,7 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 			tiles.push(this.tiles[this.get_correct_index(index, this.tiles.length)]);
 		}
 	}
+	*/
 
 	/*
 	for(var index = top_left; index <= bottom_right; index++) {
