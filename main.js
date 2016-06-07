@@ -8,11 +8,11 @@ Main.prototype.init = function(canvas_id) {
 	
 	this.entities = [];
 	
-	//for(var i = 0; i < 10; i++) {
-		//this.entities.push(new Animal(this.world));
-	//}
+	for(var i = 0; i < 10; i++) {
+		this.entities.push(new Animal(this.world));
+	}
 
-	this.entities.push(new Plant(this.world));
+	//this.entities.push(new Plant(this.world));
 	
 	return this;
 };
@@ -36,7 +36,7 @@ Main.prototype.cycle = function() {
 	this.update();
 
 	//setTimeout(this.cycle.bind(this), 1000);
-	//window.requestAnimationFrame(this.cycle.bind(this));
+	window.requestAnimationFrame(this.cycle.bind(this));
 };
 
 var main;

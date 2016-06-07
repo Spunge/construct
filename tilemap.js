@@ -9,7 +9,7 @@ Tilemap.prototype.init = function(world) {
 	this.world = world;
 	this.renderer = world.renderer;
 
-	this.tile_size = 10;
+	this.tile_size = 50;
 
 	// Amount of tiles we need for horizontal / vertical
 	this.amounts = {
@@ -57,8 +57,8 @@ Tilemap.prototype.render = function() {
 };
 
 Tilemap.prototype.get_tile_index_at_position = function(position) {
-	var index =  Math.floor((position.y - this.offset.y) / this.tile_size) * this.amounts.horizontal;
-	index += Math.floor((position.x - this.offset.x) / this.tile_size);
+	var index =  Math.floor((position.y) / this.tile_size) * this.amounts.horizontal;
+	index += Math.floor((position.x) / this.tile_size);
 
 	return index;
 };
@@ -75,7 +75,90 @@ Tilemap.prototype.get_correct_index = function(index, amount) {
 	return index;
 };
 
+Tilemap.prototype.correct_position = function(position) {
+	if(position.x < 0) {
+		position.x = this.width + position.x;
+	}
+	if(position.x > this.width) {
+		position.x = position.x - this.width;
+	}
+	if(position.y < 0) {
+		position.y = this.height + position.y;
+	}
+	if(position.y > this.height) {
+		position.y = position.y - this.height;
+	}
+
+	return position;
+};
+
+Tilemap.prototype.get_tile_at_position = function(position) {
+	// Make sure where not out of bounds
+	var correct_position = this.correct_position(position);
+
+	var index =  Math.floor((position.y) / this.tile_size) * this.amounts.horizontal;
+	index += Math.floor((position.x) / this.tile_size);
+
+	return this.tiles[index];
+};
+
 Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
+	var tiles = [];
+
+	var corrected_position = {
+		x: position.x - this.offset.x,
+		y: position.y - this.offset.y,
+	};
+
+	var top_left = this.get_tile_at_position({
+		x: corrected_position.x - radius,
+		y: corrected_position.y - radius,
+	});
+	
+	var bottom_right = this.get_tile_at_position({
+		x: corrected_position.x + radius,
+		y: corrected_position.y + radius,
+	});
+
+	var pointer = {
+		x: top_left.position.x,
+		y: top_left.position.y,
+	};
+
+	while(true) {
+		pointer.x = top_left.position.x;
+
+		while(true) {
+			tiles.push(this.get_tile_at_position(pointer));
+
+			if(pointer.x == bottom_right.position.x) {
+				break;
+			}
+
+			pointer.x += this.tile_size;
+		}
+
+		if(pointer.y == bottom_right.position.y) {
+			break;
+		}
+
+		pointer.y += this.tile_size;
+	}
+
+	/*
+	for(var y = top_left.position.y; y != bottom_right.position.y; y += this.tile_size) {
+		console.log('y');
+		for(var x = top_left.position.x; x != bottom_right.position.x; x += this.tile_size) {
+			console.log('x');
+			tiles.push(this.get_tile_at_position({
+				x: x,
+				y: y,
+			}));
+		}
+	}
+	*/
+
+
 
 	/*
 

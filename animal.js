@@ -34,10 +34,12 @@ Animal.prototype = Object.create(Entity.prototype);
 Animal.prototype.constructor = Animal;
 
 Animal.prototype.update = function() {
-	this.check_collisions_with_wall();
+	//this.collide_with_wall();
 
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;
+
+	this.pass_through_wall();
 
 	this.update_tilemap();
 };
@@ -56,7 +58,22 @@ Animal.prototype.collide_vertical = function(new_position, boundary) {
 	this.velocity.x *= -1;
 };
 
-Animal.prototype.check_collisions_with_wall = function() {
+Animal.prototype.pass_through_wall = function() {
+	if(this.position.x < 0) {
+		this.position.x = this.world.width + this.position.x;
+	}
+	if(this.position.x > this.world.width) {
+		this.position.x -= this.world.width;
+	}
+	if(this.position.y < 0) {
+		this.position.y = this.world.height + this.position.y;
+	}
+	if(this.position.y > this.world.height) {
+		this.position.y -= this.world.height;
+	}
+};
+
+Animal.prototype.collide_with_wall = function() {
 	// Where we'd be if everything goes swifty
 	var new_position = {
 		x: this.position.x + this.velocity.x,
