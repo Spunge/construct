@@ -65,11 +65,11 @@ Tilemap.prototype.get_tile_index_at_position = function(position) {
 
 Tilemap.prototype.get_correct_index = function(index, amount) {
 	if(index < 0) {
-		return amount + index;
+		return amount + index % amount;
 	}
 
 	if(index >= amount) {
-		return index - amount;
+		return index % amount;
 	}
 
 	return index;
@@ -85,11 +85,12 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	console.log('loop');
 
 	for(var index = top_left; index <= bottom_right; index += this.amounts.horizontal) {
-		var start = this.get_correct_index(top_left % this.amounts.horizontal, this.amounts.horizontal);
-		var end = this.get_correct_index(bottom_right % this.amounts.horizontal, this.amounts.horizontal);
-		var max_delta = end - start;
+		//var start = this.get_correct_index(top_left % this.amounts.horizontal, this.amounts.horizontal);
+		//var end = this.get_correct_index(bottom_right % this.amounts.horizontal, this.amounts.horizontal);
+		var start = top_left % this.amounts.horizontal;
+		var end = bottom_right % this.amounts.horizontal;
 
-		console.log(end, start, max_delta);
+		console.log(start, end, max_delta);
 
 		for(var delta = 0; delta <= max_delta;  delta++) {
 			//console.log(index, delta);
