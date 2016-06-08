@@ -5,7 +5,7 @@ var Plant = function(world) {
 	this.set_size(7.48);
 
 	// Get a random tile
-	//var index = Math.floor(Math.random() * this.tilemap.tiles.length);
+	var index = Math.floor(Math.random() * this.tilemap.tiles.length);
 	// Bottom left
 	//var index = Math.floor((this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
 	// Top left
@@ -13,7 +13,7 @@ var Plant = function(world) {
 	// Bottom right
 	//var index = Math.floor(this.tilemap.tiles.length - this.tilemap.amounts.horizontal - 2);
 	// Center top
-	var index = Math.floor(Math.round(this.tilemap.amounts.horizontal / 2) + this.tilemap.amounts.horizontal);
+	//var index = Math.floor(Math.round(this.tilemap.amounts.horizontal / 2) + this.tilemap.amounts.horizontal);
 	var position = this.tilemap.tiles[index].position;
 
 	// Plant plant there
