@@ -19,6 +19,9 @@ Renderer.prototype.fill_rect = function(x, y, width, height, color) {
 };
 
 Renderer.prototype.fill_circ = function(x, y, radius, color) {
+	// Make renderer render another circle at the other side of the screen when necessary
+	// TODO should be done elsewhere. Keep renderer as stupid as it can be
+	/*
 	if(x + radius > this.canvas.width) {
 		this.circle(x - this.canvas.width, y, radius, color);
 	}
@@ -31,6 +34,7 @@ Renderer.prototype.fill_circ = function(x, y, radius, color) {
 	if(y - radius < 0) {
 		this.circle(x, this.canvas.height + y, radius, color);
 	}
+	*/
 
 	this.circle(x, y, radius, color);
 };

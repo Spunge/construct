@@ -9,7 +9,7 @@ Tilemap.prototype.init = function(world) {
 	this.world = world;
 	this.renderer = world.renderer;
 
-	this.tile_size = 10;
+	this.tile_size = 30;
 
 	// Amount of tiles we need for horizontal / vertical
 	this.amounts = {
