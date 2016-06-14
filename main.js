@@ -8,32 +8,19 @@ Main.prototype.init = function(canvas_id) {
 	
 	this.entities = [];
 	
-	for(var i = 0; i < 100; i++) {
-		this.entities.push(new Animal(this.world));
-	}
+	//for(var i = 0; i < 100; i++) {
+		//this.world.add_entity(new Animal(this.world));
+	//}
 
-	//this.entities.push(new Plant(this.world));
-	
+	var tile = this.world.tilemap.tiles[Math.floor(Math.random() * this.world.tilemap.tiles.length)];
+	this.world.add_entity(new Plant(this.world, tile, 10));
+
 	return this;
 };
 
-Main.prototype.update = function() {
-	for(var i = 0; i < this.entities.length; i++) {
-		this.entities[i].update();
-	}
-};
-
-Main.prototype.render = function() {
-	this.world.render();
-
-	for(var i = 0; i < this.entities.length; i++) {
-		this.entities[i].render();
-	}
-};
-
 Main.prototype.cycle = function() {
-	this.render();
-	this.update();
+	this.world.render();
+	this.world.update();
 
 	//setTimeout(this.cycle.bind(this), 1000);
 	window.requestAnimationFrame(this.cycle.bind(this));

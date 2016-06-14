@@ -14,11 +14,15 @@ Entity.prototype.update = function() {
 Entity.prototype.render = function() {
 };
 
-Entity.prototype.update_tilemap = function() {
-	// Remove this entity from all tiles it occupies
+Entity.prototype.remove_from_occupied_tiles = function() {
 	for(var i = 0; i < this.occupied_tiles.length; i++) {
 		this.occupied_tiles[i].remove_entity(this);
 	}
+};
+
+Entity.prototype.update_tilemap = function() {
+	// Remove this entity from all tiles it occupies
+	this.remove_from_occupied_tiles();
 
 	this.occupied_tiles = this.tilemap.get_tiles_in_radius_of_position(this.position, this.tile_range);
 

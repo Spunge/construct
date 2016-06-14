@@ -9,7 +9,8 @@ Tilemap.prototype.init = function(world) {
 	this.world = world;
 	this.renderer = world.renderer;
 
-	this.tile_size = 30;
+	this.tile_size = 10;
+	this.tile_radius = Math.sqrt(Math.pow(this.tile_size / 2, 2) * 2);
 
 	// Amount of tiles we need for horizontal / vertical
 	this.amounts = {
@@ -102,6 +103,17 @@ Tilemap.prototype.get_tile_at_position = function(position) {
 	return this.tiles[index];
 };
 
+/*
+Tilemap.prototype.is_tile_in_radius_of_position = function(tile, position, radius) {
+	var delta_x = position.x - tile.position.x;
+	var delta_y = position.y - tile.position.y;
+
+	var delta = Math.sqrt(Math.pow(delta_x, 2) + Math.pow(delta_y, 2));
+
+	return (delta < radius + this.tile_radius);
+};
+*/
+
 Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	var tiles = [];
 
@@ -129,6 +141,12 @@ Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 		pointer.x = top_left.position.x;
 
 		while(true) {
+			//var tile = this.get_tile_at_position(pointer);
+
+			//if(this.is_tile_in_radius_of_position(tile, corrected_position, radius)) {
+				//tiles.push(tile);
+			//}
+
 			tiles.push(this.get_tile_at_position(pointer));
 
 			if(pointer.x == bottom_right.position.x) {

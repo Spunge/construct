@@ -1,11 +1,12 @@
 
-var Plant = function(world) {
+var Plant = function(world, tile, size) {
 	Entity.call(this, world);
 
-	this.set_size(7.48);
+	this.set_size(size);
+	this.max_size = 20;
+	this.offspring = 2;
 
 	// Get a random tile
-	var index = Math.floor(Math.random() * this.tilemap.tiles.length);
 	// Bottom left
 	//var index = Math.floor((this.tilemap.amounts.vertical - 2) * this.tilemap.amounts.horizontal);
 	// Top left
@@ -14,7 +15,7 @@ var Plant = function(world) {
 	//var index = Math.floor(this.tilemap.tiles.length - this.tilemap.amounts.horizontal - 2);
 	// Center top
 	//var index = Math.floor(Math.round(this.tilemap.amounts.horizontal / 2) + this.tilemap.amounts.horizontal);
-	var position = this.tilemap.tiles[index].position;
+	var position = tile.position;
 
 	// Plant plant there
 	this.set_position({
@@ -35,6 +36,23 @@ Plant.prototype.update = function() {
 	this.set_tile_range();
 
 	this.update_tilemap();
+
+	if(this.size > this.max_size) {
+		this.die();
+	}
+};
+
+Plant.prototype.create_offspring = function() {
+	for(var i = 0; i < this.offspring; i++) {
+		var tile = this.occupied_tiles[Math.floor(Math.random() * this.occupied_tiles.length)];
+		this.world.add_entity(new Plant(this.world, tile, this.size / this.offspring));
+	}
+};
+
+Plant.prototype.die = function() {
+	this.create_offspring();
+	this.remove_from_occupied_tiles();
+	this.world.remove_entity(this);
 };
 
 Plant.prototype.render = function() {
