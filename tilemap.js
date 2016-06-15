@@ -1,15 +1,9 @@
 /**
  * This is map of tiles
  */
-var Tilemap = function(world) {
-	return this.init(world);
-};
-
-Tilemap.prototype.init = function(world) {
+var Tilemap = function(world, tile_size) {
 	this.world = world;
-	this.renderer = world.renderer;
-
-	this.tile_size = 10;
+	this.tile_size = tile_size;
 	this.tile_radius = Math.sqrt(Math.pow(this.tile_size / 2, 2) * 2);
 
 	// Amount of tiles we need for horizontal / vertical
@@ -48,10 +42,10 @@ Tilemap.prototype.create_tiles = function(amount) {
 	return this;
 };
 
-Tilemap.prototype.render = function() {
+Tilemap.prototype.render = function(renderer) {
 	// Get tile coords from position in tiles array
 	for(var i = 0; i < this.tiles.length; i++) {
-		this.tiles[i].render();
+		this.tiles[i].render(renderer);
 	}
 
 	return this;

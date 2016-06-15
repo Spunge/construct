@@ -94,6 +94,6 @@ Animal.prototype.collide_with_wall = function() {
 	}
 };
 
-Animal.prototype.render = function() {
-	this.renderer.fill_circ(this.position.x, this.position.y, this.half_size, this.color);
+Animal.prototype.render = function(renderer) {
+	renderer.fill_circ(this.position.x, this.position.y, this.half_size, this.color);
 };

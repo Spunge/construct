@@ -1,14 +1,13 @@
-var World = function(renderer) {
-	return this.init(renderer);
-};
+var World = function(width, height) {
 
-World.prototype.init = function(renderer) {
-	this.renderer = renderer;
-	this.speed = 10;
-	this.width = renderer.canvas.width;
-	this.height = renderer.canvas.height;
+	var tile_size = 10;
 
-	this.tilemap = new Tilemap(this);
+
+	this.speed = 1;
+	this.width = Math.ceil(width / tile_size) * tile_size;
+	this.height = Math.ceil(height / tile_size) * tile_size;
+
+	this.tilemap = new Tilemap(this, tile_size);
 
 	this.entities = [];
 
@@ -29,12 +28,12 @@ World.prototype.update = function() {
 	}
 };
 
-World.prototype.render = function() {
-	this.renderer.fill_rect(this.width / 2, this.height / 2, this.width, this.height);
+World.prototype.render = function(renderer) {
+	renderer.fill_rect(this.width / 2, this.height / 2, this.width, this.height);
 
-	this.tilemap.render();
+	this.tilemap.render(renderer);
 
 	for(var i = 0; i < this.entities.length; i++) {
-		this.entities[i].render();
+		this.entities[i].render(renderer);
 	}
 };

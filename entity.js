@@ -1,6 +1,5 @@
 var Entity = function(world) {
 	this.world = world;
-	this.renderer = world.renderer;
 
 	this.tilemap = world.tilemap;
 	this.occupied_tiles = [];
@@ -11,7 +10,7 @@ var Entity = function(world) {
 Entity.prototype.update = function() {
 };
 
-Entity.prototype.render = function() {
+Entity.prototype.render = function(renderer) {
 };
 
 Entity.prototype.remove_from_occupied_tiles = function() {

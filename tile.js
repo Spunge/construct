@@ -7,7 +7,6 @@ var Tile = function(tilemap, position) {
 
 Tile.prototype.init = function(tilemap, position) {
 	this.tilemap = tilemap;
-	this.renderer = tilemap.renderer;
 	this.position = position;
 	this.entities = [];
 	this.luminescence = 64;
@@ -27,7 +26,7 @@ Tile.prototype.remove_entity = function(entity) {
 	return this;
 };
 
-Tile.prototype.render = function() {
+Tile.prototype.render = function(renderer) {
 	// Only paint when entities on tile
 	if(this.entities.length) {
 		var color_int = this.entities.length * this.luminescence;
@@ -35,8 +34,8 @@ Tile.prototype.render = function() {
 		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
 
 		// Only paint when we need to
-		this.renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size, this.tilemap.tile_size, color);
-		this.renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size - 4, this.tilemap.tile_size - 4);
+		renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size, this.tilemap.tile_size, color);
+		renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size - 4, this.tilemap.tile_size - 4);
 	}
 };
  
