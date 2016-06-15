@@ -27,7 +27,7 @@ World.prototype.update = function() {
 };
 
 World.prototype.render = function(renderer) {
-	this.tilemap.render(renderer);
+	//this.tilemap.render(renderer);
 
 	for(var i = 0; i < this.entities.length; i++) {
 		this.entities[i].render(renderer);

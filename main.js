@@ -6,7 +6,7 @@ Main.prototype.init = function(canvas_id) {
 	this.paused = false;
 
 	this.camera = new Camera(canvas_id);
-	this.world = new World(800, 600);
+	this.world = new World(400, 300);
 	
 	this.camera.observe(this.world);
 
@@ -14,7 +14,7 @@ Main.prototype.init = function(canvas_id) {
 		//this.world.add_entity(new Animal(this.world));
 	//}
 
-	for(var i = 0; i < 10; i++) {
+	for(var i = 0; i < 1; i++) {
 		var position = {
 			x: this.world.width * Math.random(),
 			y: this.world.height * Math.random(),
@@ -29,9 +29,9 @@ Main.prototype.init = function(canvas_id) {
 Main.prototype.cycle = function() {
 	if( ! this.paused) {
 		this.camera.render();
-		this.world.update();
+		//this.world.update();
 
-		window.requestAnimationFrame(this.cycle.bind(this));
+		//window.requestAnimationFrame(this.cycle.bind(this));
 	}
 };
 
