@@ -9,7 +9,7 @@ Tile.prototype.init = function(tilemap, position) {
 	this.tilemap = tilemap;
 	this.position = position;
 	this.entities = [];
-	this.luminescence = 64;
+	this.luminescence = 32;
 
 	return this;
 };
@@ -33,7 +33,7 @@ Tile.prototype.render = function(renderer) {
 	if(this.entities.length) {
 		var color_int = this.entities.length * this.luminescence;
 
-		color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
+		color = 'rgb(0, '+color_int+', 0)';
 	}
 
 	// Only paint when we need to

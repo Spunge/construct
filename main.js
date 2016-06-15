@@ -3,6 +3,8 @@ var Main = function(canvas_id) {
 };
 
 Main.prototype.init = function(canvas_id) {
+	this.paused = false;
+
 	this.camera = new Camera(canvas_id);
 	this.world = new World(800, 600);
 	
@@ -12,21 +14,25 @@ Main.prototype.init = function(canvas_id) {
 		//this.world.add_entity(new Animal(this.world));
 	//}
 
-	var position = {
-		x: this.world.width * Math.random(),
-		y: this.world.height * Math.random(),
-	};
+	for(var i = 0; i < 10; i++) {
+		var position = {
+			x: this.world.width * Math.random(),
+			y: this.world.height * Math.random(),
+		};
 
-	this.world.add_entity(new Plant(this.world, position, 10));
+		this.world.add_entity(new Plant(this.world, position, 10));
+	}
 
 	return this;
 };
 
 Main.prototype.cycle = function() {
-	this.camera.render();
-	this.world.update();
+	if( ! this.paused) {
+		this.camera.render();
+		this.world.update();
 
-	window.requestAnimationFrame(this.cycle.bind(this));
+		window.requestAnimationFrame(this.cycle.bind(this));
+	}
 };
 
 var main;
@@ -36,8 +42,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	window.requestAnimationFrame(main.cycle.bind(main));
 
 	document.addEventListener('click', function() {
-		main.camera.render();
-		main.world.update();
+		main.paused = ! main.paused;
+
+		if( ! main.paused) {
+			main.cycle();
+		}
 	});
 
 	document.addEventListener('mousewheel', function(e) {

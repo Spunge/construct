@@ -34,7 +34,15 @@ Plant.prototype.update = function() {
 Plant.prototype.create_offspring = function() {
 	for(var i = 0; i < this.offspring; i++) {
 		var tile = this.occupied_tiles[Math.floor(Math.random() * this.occupied_tiles.length)];
-		this.world.add_entity(new Plant(this.world, tile, this.size / this.offspring));
+
+		var random_angle = Math.random() * 2 * Math.PI;
+		var random_radius = Math.random() * this.tile_range * 2;
+		var position = {
+			x: random_radius * Math.cos(random_angle) + this.position.x,
+			y: random_radius * Math.sin(random_angle) + this.position.y,
+		};
+
+		this.world.add_entity(new Plant(this.world, position, this.size / this.offspring));
 	}
 };
 

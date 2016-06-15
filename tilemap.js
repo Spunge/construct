@@ -16,19 +16,13 @@ var Tilemap = function(world, tile_size) {
 	this.width = this.amounts.horizontal * this.tile_size;
 	this.height = this.amounts.vertical * this.tile_size;
 
-	// Position (altered to center tilemap);
-	this.offset = {
-		x: (this.world.width - this.width) / 2,
-		y: (this.world.height - this.height) / 2,
-	};
-
 	return this.create_tiles(this.amounts.horizontal * this.amounts.vertical);
 };
 
 Tilemap.prototype.get_tile_position_by_index = function(index) {
 	return {
-		x: (index % this.amounts.horizontal) * this.tile_size + this.tile_size / 2 + this.offset.x,
-		y: Math.floor(index / this.amounts.horizontal) * this.tile_size + this.tile_size / 2 + this.offset.y,
+		x: (index % this.amounts.horizontal) * this.tile_size + this.tile_size / 2,
+		y: Math.floor(index / this.amounts.horizontal) * this.tile_size + this.tile_size / 2,
 	};
 };
 
@@ -111,19 +105,14 @@ Tilemap.prototype.is_tile_in_radius_of_position = function(tile, position, radiu
 Tilemap.prototype.get_tiles_in_radius_of_position = function(position, radius) {
 	var tiles = [];
 
-	var corrected_position = {
-		x: position.x - this.offset.x,
-		y: position.y - this.offset.y,
-	};
-
 	var top_left = this.get_tile_at_position({
-		x: corrected_position.x - radius,
-		y: corrected_position.y - radius,
+		x: position.x - radius,
+		y: position.y - radius,
 	});
 	
 	var bottom_right = this.get_tile_at_position({
-		x: corrected_position.x + radius,
-		y: corrected_position.y + radius,
+		x: position.x + radius,
+		y: position.y + radius,
 	});
 
 	var pointer = {

@@ -1,7 +1,7 @@
 var World = function(width, height) {
 	var tile_size = 10;
 
-	this.speed = 20;
+	this.speed = 10;
 	this.width = Math.ceil(width / tile_size) * tile_size;
 	this.height = Math.ceil(height / tile_size) * tile_size;
 
