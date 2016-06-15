@@ -9,7 +9,7 @@ Tile.prototype.init = function(tilemap, position) {
 	this.tilemap = tilemap;
 	this.position = position;
 	this.entities = [];
-	this.luminescence = 32;
+	this.luminescence = 64;
 
 	return this;
 };
@@ -27,17 +27,17 @@ Tile.prototype.remove_entity = function(entity) {
 };
 
 Tile.prototype.render = function(renderer) {
-	var color = 'rgb(51, 0, 0)';
+	var color = '#440000';
 
 	// Only paint when entities on tile
 	if(this.entities.length) {
 		var color_int = this.entities.length * this.luminescence;
 
-		color = 'rgb(0, '+color_int+', 0)';
+		color = '#00'+color_int.toString(16)+'00';
 	}
 
 	// Only paint when we need to
 	renderer.rectangle(this.position.x, this.position.y, this.tilemap.tile_size, this.tilemap.tile_size, color);
-	renderer.rectangle(this.position.x, this.position.y, this.tilemap.tile_size - 4, this.tilemap.tile_size - 4);
+	renderer.rectangle(this.position.x, this.position.y, this.tilemap.tile_size - 2, this.tilemap.tile_size - 2);
 };
  
