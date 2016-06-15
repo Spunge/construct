@@ -45,9 +45,9 @@ Plant.prototype.die = function() {
 };
 
 Plant.prototype.render = function(renderer) {
-	renderer.fill_rect(this.position.x, this.position.y, this.size, this.size, '#00ff00');
+	renderer.rectangle(this.position.x, this.position.y, this.size, this.size, '#00ff00');
 };
 
 Plant.prototype.set_tile_range = function() {
-	this.tile_range = this.size * 2;
+	this.tile_range = this.size * 3;
 };

@@ -27,15 +27,17 @@ Tile.prototype.remove_entity = function(entity) {
 };
 
 Tile.prototype.render = function(renderer) {
+	var color = 'rgb(51, 0, 0)';
+
 	// Only paint when entities on tile
 	if(this.entities.length) {
 		var color_int = this.entities.length * this.luminescence;
 
-		var color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
-
-		// Only paint when we need to
-		renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size, this.tilemap.tile_size, color);
-		renderer.fill_rect(this.position.x, this.position.y, this.tilemap.tile_size - 4, this.tilemap.tile_size - 4);
+		color = 'rgb('+color_int+', '+color_int+', '+color_int+')';
 	}
+
+	// Only paint when we need to
+	renderer.rectangle(this.position.x, this.position.y, this.tilemap.tile_size, this.tilemap.tile_size, color);
+	renderer.rectangle(this.position.x, this.position.y, this.tilemap.tile_size - 4, this.tilemap.tile_size - 4);
 };
  
