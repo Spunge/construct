@@ -36,5 +36,5 @@ Camera.prototype.render = function() {
 
 	this.world.render();
 
-	this.renderer.box();
+	//this.renderer.box();
 };

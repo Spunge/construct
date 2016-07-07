@@ -18,6 +18,8 @@ Renderer.prototype.init = function() {
 	var program = createProgramFromScripts(this.gl, ["2d-vertex-shader", "2d-fragment-shader"]);
 	this.gl.useProgram(program);
 
+	this.gl.clearColor(0, 0, 0, 1);
+
 	// Where the data goes
 	this.position_location = this.gl.getAttribLocation(program, "a_position");
 	this.color_location = this.gl.getUniformLocation(program, "u_color");
@@ -133,18 +135,7 @@ Renderer.prototype.calculate_offset = function() {
 
 Renderer.prototype.clear = function() {
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-	this.fill_rect(0, 0, this.canvas.width, this.canvas.height, this.background);
-};
-
-Renderer.prototype.box = function() {
-	if(this.offset.x > 0) {
-		this.fill_rect(0, 0, this.offset.x, this.canvas.height, this.background);
-		this.fill_rect(this.offset.x + this.viewport.width * this.scale, 0, this.offset.x, this.canvas.height, this.background);
-	}
-	if(this.offset.y > 0) {
-		this.fill_rect(0, 0, this.canvas.width, this.offset.y, this.background);
-		this.fill_rect(0, this.offset.y + this.viewport.height * this.scale, this.canvas.width, this.offset.y, this.background);
-	}
+	return this;
 };
 
 Renderer.prototype.hex_to_rgb = function(string) {
@@ -169,8 +160,8 @@ Renderer.prototype.set_color = function(color) {
 Renderer.prototype.set_translation = function(matrix) {
 	matrix = this.multiply_matrices(
 		matrix,
-		this.translate_matrix(this.offset.x, this.offset.y),
-		this.scale_matrix(this.scale, this.scale)
+		this.scale_matrix(this.scale, this.scale),
+		this.translate_matrix(this.offset.x, this.offset.y)
 	);
 
 	this.gl.uniformMatrix3fv(this.matrix_location, false, matrix);
@@ -193,58 +184,3 @@ Renderer.prototype.draw = function() {
 	return this;
 };
 
-Renderer.prototype.fill_rect = function(x, y, width, height, color) {
-
-	this.gl.uniform4f(this.color_location, color[0], color[1], color[2], 1);
-
-	this.gl.enableVertexAttribArray(this.position_location);
-	this.gl.vertexAttribPointer(this.position_location, 2, this.gl.FLOAT, false, 0, 0);
-
-	// draw
-	this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
-
-	//this.context.fillStyle = color || '#000000';
-	//this.context.fillRect(x, y, width, height);
-};
-
-Renderer.prototype.rectangle = function(x, y, width, height, color) {
-	this.fill_rect(
-		this.offset.x + (x * this.scale) - (width * this.scale) / 2, 
-		this.offset.y + (y * this.scale) - (height * this.scale) / 2, 
-		width * this.scale, 
-		height * this.scale,
-		this.hex_to_rgb(color || '#000000')
-	);
-};
-
-Renderer.prototype.fill_circ = function(x, y, radius, color) {
-	// Make renderer render another circle at the other side of the screen when necessary
-	// TODO should be done elsewhere. Keep renderer as stupid as it can be
-	/*
-	if(x + radius > this.canvas.width) {
-		this.circle(x - this.canvas.width, y, radius, color);
-	}
-	if(x - radius < 0) {
-		this.circle(this.canvas.width + x, y, radius, color);
-	}
-	if(y + radius > this.canvas.height) {
-		this.circle(x, y - this.canvas.height, radius, color);
-	}
-	if(y - radius < 0) {
-		this.circle(x, this.canvas.height + y, radius, color);
-	}
-	*/
-	this.context.beginPath();
-	this.context.arc(x, y, radius, 0, 2 * Math.PI, false);
-	this.context.fillStyle = color;
-	this.context.fill();
-};
-
-Renderer.prototype.circle = function(x, y, radius, color) {
-	this.fill_circ(
-		this.offset.x + (x * this.scale), 
-		this.offset.y + (y * this.scale), 
-		radius * this.scale,
-		color
-	);
-};

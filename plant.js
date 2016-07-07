@@ -9,13 +9,15 @@ Plant.prototype.constructor = Plant;
 
 Plant.prototype.update = function() {
 	// Update size
-	//this.set_size(this.size * (1 + 0.0001 * this.world.speed));
+	this.set_size(this.size * (1 + 0.0001 * this.world.speed));
+
+	// Create translation
 	this.update_translation();
 
 	// Die when we grow to big
-	//if(this.size > this.max_size) {
-		//this.die();
-	//}
+	if(this.size > this.max_size) {
+		this.die();
+	}
 };
 
 Plant.prototype.init = function() {
@@ -27,7 +29,8 @@ Plant.prototype.init = function() {
 Plant.prototype.update_translation = function() {
 	this.translation = this.renderer.multiply_matrices(
 		this.renderer.identity_matrix(),
-		this.renderer.translate_matrix(this.position.x, this.position.y)
+		this.renderer.scale_matrix(this.size, this.size),
+		this.renderer.translate_matrix(this.position.x - this.size / 2, this.position.y - this.size / 2)
 	);
 
 	return this;
@@ -41,11 +44,11 @@ Plant.prototype.init_buffer = function() {
 		this.renderer.gl.ARRAY_BUFFER,
 		new Float32Array([
 			0, 0,
-			this.size, 0,
-			0, this.size,
-			0, this.size,
-			this.size, 0,
-			this.size, this.size 
+			1, 0,
+			0, 1,
+			0, 1,
+			1, 0,
+			1, 1
 		]),
 		this.renderer.gl.STATIC_DRAW
 	);

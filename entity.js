@@ -44,14 +44,6 @@ Entity.prototype.update_tilemap = function() {
 	return this;
 };
 
-Entity.prototype.set_size = function(size) {
-	this.size = size;
-	this.half_size = this.size / 2;
-	this.tile_range = this.half_size;
-
-	return this;
-};
-
 Entity.prototype.set_position = function(position) {
 	this.position = position;
 
