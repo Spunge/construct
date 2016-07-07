@@ -1,13 +1,18 @@
-var Animal = function(world) {
-	// Create animal with random pos
-	Entity.call(this, world);
+var Animal = function() {
+};
 
-	this.set_size(Util.random(5, 50));
+Animal.prototype = Object.create(Entity.prototype);
+Animal.prototype.constructor = Animal;
+
+Animal.prototype.init = function() {
+	this.set_size(Util.random(1, 20));
 
 	this.set_position({
-		x: Util.random(this.half_size, world.width - this.half_size),
-		y: Util.random(this.half_size, world.height - this.half_size),
+		x: Util.random(this.half_size, this.world.width - this.half_size),
+		y: Util.random(this.half_size, this.world.height - this.half_size),
 	});
+
+	this.update_tilemap();
 
 	// Where to collide
 	this.boundaries = {
@@ -17,21 +22,19 @@ var Animal = function(world) {
 		left: this.half_size,
 	};
 
-	var speed = Util.random(0.5, 1.5) * world.speed;
+	var speed = Util.random(0.5, 1.5) * this.world.speed;
 	this.velocity = {
 		x: Util.random(speed * -1, speed),
 		y: Util.random(speed * -1, speed),
 	};
 
-	this.update_tilemap();
-
 	this.color = '#ff0000';
+
+	this.init_buffer();
+	this.update_translation();
 
 	return this;
 };
-
-Animal.prototype = Object.create(Entity.prototype);
-Animal.prototype.constructor = Animal;
 
 Animal.prototype.update = function() {
 	//this.collide_with_wall();
@@ -42,11 +45,9 @@ Animal.prototype.update = function() {
 	this.pass_through_wall();
 
 	this.update_tilemap();
-};
 
-function remove_entity_from_tile(tile, entity) {
-	tile.remove_entity(entity);
-}
+	this.update_translation();
+};
 
 Animal.prototype.collide_horizontal = function(new_position, boundary) {
 	this.position.y += (this.velocity.y - (new_position.y - boundary));
@@ -94,6 +95,10 @@ Animal.prototype.collide_with_wall = function() {
 	}
 };
 
-Animal.prototype.render = function(renderer) {
-	renderer.circle(this.position.x, this.position.y, this.half_size, this.color);
+Animal.prototype.render = function() {
+	this.renderer
+		.set_color('#ff0000')
+		.set_buffer(this.buffer)
+		.set_translation(this.translation)
+		.draw();
 };

@@ -11,6 +11,8 @@ Plant.prototype.update = function() {
 	// Update size
 	this.set_size(this.size * (1 + 0.0001 * this.world.speed));
 
+	this.update_tilemap();
+
 	// Create translation
 	this.update_translation();
 

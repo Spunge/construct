@@ -86,11 +86,8 @@ Tile.prototype.render = function() {
 		.set_color(color)
 		.set_buffer(this.buffer)
 		.set_translation(this.outer_translation)
-		.draw();
-
-	this.renderer
+		.draw()
 		.set_color('#000000')
-		.set_buffer(this.buffer)
 		.set_translation(this.inner_translation)
 		.draw();
 };

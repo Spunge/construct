@@ -18,10 +18,11 @@ Main.prototype.init = function(canvas_id) {
 		.observe(this.world)
 		.init();
 
-	for(var i = 0; i < 10; i++) {
+	for(var i = 0; i < 1000; i++) {
 		var animal = new Animal()
 			.set_renderer(this.renderer)
-			.set_world(this.world);
+			.set_world(this.world)
+			.init();
 
 		this.world.add_entity(animal);
 	}

@@ -23,6 +23,36 @@ Entity.prototype.init = function() {
 	return this;
 };
 
+Entity.prototype.init_buffer = function() {
+	this.buffer = this.renderer.gl.createBuffer();
+
+	this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER, this.buffer);
+	this.renderer.gl.bufferData(
+		this.renderer.gl.ARRAY_BUFFER,
+		new Float32Array([
+			0, 0,
+			1, 0,
+			0, 1,
+			0, 1,
+			1, 0,
+			1, 1
+		]),
+		this.renderer.gl.STATIC_DRAW
+	);
+
+	return this;
+};
+
+Entity.prototype.update_translation = function() {
+	this.translation = this.renderer.multiply_matrices(
+		this.renderer.identity_matrix(),
+		this.renderer.scale_matrix(this.size, this.size),
+		this.renderer.translate_matrix(this.position.x - this.half_size, this.position.y - this.half_size)
+	);
+
+	return this;
+};
+
 Entity.prototype.remove_from_occupied_tiles = function() {
 	for(var i = 0; i < this.occupied_tiles.length; i++) {
 		this.occupied_tiles[i].remove_entity(this);
@@ -54,9 +84,7 @@ Entity.prototype.set_size = function(size) {
 	this.size = size;
 	this.half_size = this.size / 2;
 
-	return this
-		.set_tile_range()
-		.update_tilemap();
+	return this.set_tile_range();
 };
 
 Entity.prototype.set_tile_range = function() {

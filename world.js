@@ -1,6 +1,6 @@
 var World = function() {
-	this.speed = 10;
-	this.tile_size = 10;
+	this.speed = 1;
+	this.tile_size = 20;
 };
 
 World.prototype.set_renderer = function(renderer) {
@@ -41,7 +41,7 @@ World.prototype.update = function() {
 };
 
 World.prototype.render = function() {
-	this.tilemap.render();
+	//this.tilemap.render();
 
 	for(var i = 0; i < this.entities.length; i++) {
 		this.entities[i].render();
