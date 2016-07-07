@@ -9,12 +9,48 @@ Plant.prototype.constructor = Plant;
 
 Plant.prototype.update = function() {
 	// Update size
-	this.set_size(this.size * (1 + 0.0001 * this.world.speed));
+	//this.set_size(this.size * (1 + 0.0001 * this.world.speed));
+	this.update_translation();
 
 	// Die when we grow to big
-	if(this.size > this.max_size) {
-		this.die();
-	}
+	//if(this.size > this.max_size) {
+		//this.die();
+	//}
+};
+
+Plant.prototype.init = function() {
+	return this
+		.update_translation()
+		.init_buffer();
+};
+
+Plant.prototype.update_translation = function() {
+	this.translation = this.renderer.multiply_matrices(
+		this.renderer.identity_matrix(),
+		this.renderer.translate_matrix(this.position.x, this.position.y)
+	);
+
+	return this;
+};
+
+Plant.prototype.init_buffer = function() {
+	this.buffer = this.renderer.gl.createBuffer();
+
+	this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER, this.buffer);
+	this.renderer.gl.bufferData(
+		this.renderer.gl.ARRAY_BUFFER,
+		new Float32Array([
+			0, 0,
+			this.size, 0,
+			0, this.size,
+			0, this.size,
+			this.size, 0,
+			this.size, this.size 
+		]),
+		this.renderer.gl.STATIC_DRAW
+	);
+
+	return this;
 };
 
 Plant.prototype.create_offspring = function() {
@@ -53,7 +89,11 @@ Plant.prototype.die = function() {
 };
 
 Plant.prototype.render = function() {
-	this.renderer.rectangle(this.position.x, this.position.y, this.size, this.size, '#00ff00');
+	this.renderer
+		.set_color('#00ff00')
+		.set_buffer(this.buffer)
+		.set_translation(this.translation)
+		.draw();
 };
 
 Plant.prototype.set_tile_range = function() {

@@ -5,7 +5,8 @@ var Main = function(canvas_id) {
 Main.prototype.init = function(canvas_id) {
 	this.paused = false;
 
-	this.renderer = new Renderer(canvas_id);
+	this.renderer = new Renderer(canvas_id)
+		.init();
 
 	this.world = new World()
 		.set_renderer(this.renderer)
@@ -16,7 +17,6 @@ Main.prototype.init = function(canvas_id) {
 		.set_renderer(this.renderer)
 		.observe(this.world)
 		.init();
-
 
 	//for(var i = 0; i < 10; i++) {
 		//this.world.add_entity(new Animal(this.world));
@@ -44,9 +44,9 @@ Main.prototype.init = function(canvas_id) {
 Main.prototype.cycle = function() {
 	if( ! this.paused) {
 		this.camera.render();
-		//this.world.update();
+		this.world.update();
 
-		//window.requestAnimationFrame(this.cycle.bind(this));
+		window.requestAnimationFrame(this.cycle.bind(this));
 	}
 };
 

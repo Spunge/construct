@@ -34,7 +34,7 @@ Camera.prototype.zoom_out = function() {
 Camera.prototype.render = function() {
 	this.renderer.clear();
 
-	this.world.render(this.renderer);
+	this.world.render();
 
 	this.renderer.box();
 };

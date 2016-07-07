@@ -4,12 +4,28 @@ var Renderer = function(canvas_id) {
 	this.canvas = document.getElementById(canvas_id);
 	this.resize();
 
-	this.init_gl();
-
 	window.addEventListener('resize', function() {
 		this.resize();
 		this.calculate_offset();
 	}.bind(this));
+};
+
+Renderer.prototype.init = function() {
+	// Get context
+	this.gl = this.canvas.getContext("webgl");
+
+	// Create program
+	var program = createProgramFromScripts(this.gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+	this.gl.useProgram(program);
+
+	// Where the data goes
+	this.position_location = this.gl.getAttribLocation(program, "a_position");
+	this.color_location = this.gl.getUniformLocation(program, "u_color");
+	this.matrix_location = this.gl.getUniformLocation(program, "u_matrix");
+
+	// set the resolution
+	var resolutionLocation = this.gl.getUniformLocation(program, "u_resolution");
+	this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
 
 	return this;
 };
@@ -19,29 +35,43 @@ Renderer.prototype.multiply_matrices = function() {
 	var cache = arguments[0];
 
 	// Multiply cache with second matrix
-	for(var c = 1; c < arguments.length; c++) {
-		for (var i = 0; i < cache.length; i++) {
-			result[i] = [];
+	for(var i = 1; i < arguments.length; i++) {
+		var a00 = cache[0 * 3 + 0];
+		var a01 = cache[0 * 3 + 1];
+		var a02 = cache[0 * 3 + 2];
+		var a10 = cache[1 * 3 + 0];
+		var a11 = cache[1 * 3 + 1];
+		var a12 = cache[1 * 3 + 2];
+		var a20 = cache[2 * 3 + 0];
+		var a21 = cache[2 * 3 + 1];
+		var a22 = cache[2 * 3 + 2];
+		var b00 = arguments[i][0 * 3 + 0];
+		var b01 = arguments[i][0 * 3 + 1];
+		var b02 = arguments[i][0 * 3 + 2];
+		var b10 = arguments[i][1 * 3 + 0];
+		var b11 = arguments[i][1 * 3 + 1];
+		var b12 = arguments[i][1 * 3 + 2];
+		var b20 = arguments[i][2 * 3 + 0];
+		var b21 = arguments[i][2 * 3 + 1];
+		var b22 = arguments[i][2 * 3 + 2];
 
-			for (var j = 0; j < arguments[c][0].length; j++) {
-				var sum = 0;
-
-				for (var k = 0; k < cache[0].length; k++) {
-					sum += cache[i][k] * arguments[c][k][j];
-				}
-
-				result[i][j] = sum;
-			}
-		}
-
-		// Set cache to be new result and continue to multiply next matrix
-		cache = result;
+		cache = [
+			a00 * b00 + a01 * b10 + a02 * b20,
+			a00 * b01 + a01 * b11 + a02 * b21,
+			a00 * b02 + a01 * b12 + a02 * b22,
+			a10 * b00 + a11 * b10 + a12 * b20,
+			a10 * b01 + a11 * b11 + a12 * b21,
+			a10 * b02 + a11 * b12 + a12 * b22,
+			a20 * b00 + a21 * b10 + a22 * b20,
+			a20 * b01 + a21 * b11 + a22 * b21,
+			a20 * b02 + a21 * b12 + a22 * b22,
+		];
 	}
 	
 	return cache;
 };
 
-Renderer.prototype.indentity_matrix = function() {
+Renderer.prototype.identity_matrix = function() {
 	return [
 		1, 0, 0,
 		0, 1, 0,
@@ -74,24 +104,6 @@ Renderer.prototype.scale_matrix = function(x, y) {
 		0, y, 0,
 		0, 0, 1,
 	];
-};
-
-Renderer.prototype.init_gl = function() {
-	// Get context
-	this.gl = this.canvas.getContext("webgl");
-
-	// Create program
-	var program = createProgramFromScripts(this.gl, ["2d-vertex-shader", "2d-fragment-shader"]);
-	this.gl.useProgram(program);
-
-	// Where the data goes
-	this.position_location = this.gl.getAttribLocation(program, "a_position");
-	this.color_location = this.gl.getUniformLocation(program, "u_color");
-
-	// set the resolution
-	var resolutionLocation = this.gl.getUniformLocation(program, "u_resolution");
-	this.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-
 };
 
 Renderer.prototype.resize = function() {
@@ -144,21 +156,44 @@ Renderer.prototype.hex_to_rgb = function(string) {
 	return [r / 255, g / 255, b / 255];
 };
 
-Renderer.prototype.fill_rect = function(x, y, width, height, color) {
-	var buffer = this.gl.createBuffer();
-	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-	this.gl.bufferData(
-		this.gl.ARRAY_BUFFER,
-		new Float32Array([
-			x, y,
-			x + width, y,
-			x, y + height,
-			x, y + height,
-			x + width, y,
-			x + width, y + height 
-		]),
-		this.gl.STATIC_DRAW
+Renderer.prototype.set_color = function(color) {
+	// Get color in RGB
+	color = this.hex_to_rgb(color || '#000000');
+
+	// Set color uniform
+	this.gl.uniform4f(this.color_location, color[0], color[1], color[2], 1);
+
+	return this;
+};
+
+Renderer.prototype.set_translation = function(matrix) {
+	matrix = this.multiply_matrices(
+		matrix,
+		this.translate_matrix(this.offset.x, this.offset.y),
+		this.scale_matrix(this.scale, this.scale)
 	);
+
+	this.gl.uniformMatrix3fv(this.matrix_location, false, matrix);
+	return this;
+};
+
+Renderer.prototype.set_buffer = function(buffer) {
+	// Bind to buffer
+	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+
+	// Set up <x> so we can draw
+	this.gl.enableVertexAttribArray(this.position_location);
+	this.gl.vertexAttribPointer(this.position_location, 2, this.gl.FLOAT, false, 0, 0);
+
+	return this;
+};
+
+Renderer.prototype.draw = function() {
+	this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+	return this;
+};
+
+Renderer.prototype.fill_rect = function(x, y, width, height, color) {
 
 	this.gl.uniform4f(this.color_location, color[0], color[1], color[2], 1);
 
