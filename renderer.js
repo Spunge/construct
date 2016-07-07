@@ -14,6 +14,68 @@ var Renderer = function(canvas_id) {
 	return this;
 };
 
+Renderer.prototype.multiply_matrices = function() {
+	// Put first matrix in cache
+	var cache = arguments[0];
+
+	// Multiply cache with second matrix
+	for(var c = 1; c < arguments.length; c++) {
+		for (var i = 0; i < cache.length; i++) {
+			result[i] = [];
+
+			for (var j = 0; j < arguments[c][0].length; j++) {
+				var sum = 0;
+
+				for (var k = 0; k < cache[0].length; k++) {
+					sum += cache[i][k] * arguments[c][k][j];
+				}
+
+				result[i][j] = sum;
+			}
+		}
+
+		// Set cache to be new result and continue to multiply next matrix
+		cache = result;
+	}
+	
+	return cache;
+};
+
+Renderer.prototype.indentity_matrix = function() {
+	return [
+		1, 0, 0,
+		0, 1, 0,
+		0, 0, 1,
+	];
+};
+
+Renderer.prototype.translate_matrix = function(x, y) {
+	return [
+		1, 0, 0,
+		0, 1, 0,
+		x, y, 1,
+	];
+};
+
+Renderer.prototype.rotate_matrix = function(angle) {
+	var c = Math.cos(angle);
+	var s = Math.sin(angle);
+
+	return [
+		c, -s, 0,
+		s, c, 0,
+		0, 0, 1,
+	];
+};
+
+Renderer.prototype.scale_matrix = function(x, y) {
+	return [
+		x, 0, 0,
+		0, y, 0,
+		0, 0, 1,
+	];
+};
+
 Renderer.prototype.init_gl = function() {
 	// Get context
 	this.gl = this.canvas.getContext("webgl");

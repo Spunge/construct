@@ -1,11 +1,25 @@
-var World = function(width, height) {
-	var tile_size = 10;
-
+var World = function() {
 	this.speed = 1;
-	this.width = Math.ceil(width / tile_size) * tile_size;
-	this.height = Math.ceil(height / tile_size) * tile_size;
+	this.tile_size = 10;
+};
 
-	this.tilemap = new Tilemap(this, tile_size);
+World.prototype.set_renderer = function(renderer) {
+	this.renderer = renderer;
+	return this;
+};
+
+World.prototype.set_size = function(width, height) {
+	this.width = Math.ceil(width / this.tile_size) * this.tile_size;
+	this.height = Math.ceil(height / this.tile_size) * this.tile_size;
+	return this;
+};
+
+World.prototype.init = function() {
+	this.tilemap = new Tilemap()
+		.set_renderer(this.renderer)
+		.set_world(this)
+		.set_tile_size(this.tile_size)
+		.init();
 
 	this.entities = [];
 
@@ -26,10 +40,10 @@ World.prototype.update = function() {
 	}
 };
 
-World.prototype.render = function(renderer) {
-	this.tilemap.render(renderer);
+World.prototype.render = function() {
+	this.tilemap.render();
 
 	for(var i = 0; i < this.entities.length; i++) {
-		this.entities[i].render(renderer);
+		this.entities[i].render();
 	}
 };

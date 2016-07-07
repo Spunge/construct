@@ -1,11 +1,25 @@
 /**
  * This is map of tiles
  */
-var Tilemap = function(world, tile_size) {
+var Tilemap = function() {};
+
+Tilemap.prototype.set_world = function(world) {
 	this.world = world;
+	return this;
+};
+
+Tilemap.prototype.set_renderer = function(renderer) {
+	this.renderer = renderer;
+	return this;
+};
+
+Tilemap.prototype.set_tile_size = function(tile_size) {
 	this.tile_size = tile_size;
 	this.tile_radius = Math.sqrt(Math.pow(this.tile_size / 2, 2) * 2);
+	return this;
+};
 
+Tilemap.prototype.init = function() {
 	// Amount of tiles we need for horizontal / vertical
 	this.amounts = {
 		horizontal: Math.ceil(this.world.width / this.tile_size),
@@ -30,7 +44,13 @@ Tilemap.prototype.create_tiles = function(amount) {
 	this.tiles = [];
 	
 	for(var i = 0; i < amount; i++) {
-		this.tiles.push(new Tile(this, this.get_tile_position_by_index(i)));
+		var tile = new Tile()
+			.set_renderer(this.renderer)
+			.set_tilemap(this)
+			.set_position(this.get_tile_position_by_index(i))
+			.init();
+
+		this.tiles.push(tile);
 	}
 
 	return this;

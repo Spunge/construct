@@ -5,10 +5,18 @@ var Main = function(canvas_id) {
 Main.prototype.init = function(canvas_id) {
 	this.paused = false;
 
-	this.camera = new Camera(canvas_id);
-	this.world = new World(400, 300);
+	this.renderer = new Renderer(canvas_id);
+
+	this.world = new World()
+		.set_renderer(this.renderer)
+		.set_size(400, 300)
+		.init();
 	
-	this.camera.observe(this.world);
+	this.camera = new Camera()
+		.set_renderer(this.renderer)
+		.observe(this.world)
+		.init();
+
 
 	//for(var i = 0; i < 10; i++) {
 		//this.world.add_entity(new Animal(this.world));
@@ -20,7 +28,14 @@ Main.prototype.init = function(canvas_id) {
 			y: this.world.height * Math.random(),
 		};
 
-		this.world.add_entity(new Plant(this.world, position, 10));
+		var plant = new Plant()
+			.set_renderer(this.renderer)
+			.set_world(this.world)
+			.set_position(position)
+			.set_size(10)
+			.init();
+
+		this.world.add_entity(plant);
 	}
 
 	return this;
