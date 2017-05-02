@@ -56,10 +56,10 @@ Tilemap.prototype.create_tiles = function(amount) {
 	return this;
 };
 
-Tilemap.prototype.render = function(renderer) {
+Tilemap.prototype.render = function() {
 	// Get tile coords from position in tiles array
 	for(var i = 0; i < this.tiles.length; i++) {
-		this.tiles[i].render(renderer);
+		this.tiles[i].render();
 	}
 
 	return this;

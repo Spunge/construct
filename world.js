@@ -8,6 +8,11 @@ World.prototype.set_renderer = function(renderer) {
 	return this;
 };
 
+World.prototype.set_speed = function(speed) {
+	this.speed = speed;
+	return this;
+};
+
 World.prototype.set_size = function(width, height) {
 	this.width = Math.ceil(width / this.tile_size) * this.tile_size;
 	this.height = Math.ceil(height / this.tile_size) * this.tile_size;
@@ -41,7 +46,7 @@ World.prototype.update = function() {
 };
 
 World.prototype.render = function() {
-	//this.tilemap.render();
+	this.tilemap.render();
 
 	for(var i = 0; i < this.entities.length; i++) {
 		this.entities[i].render();

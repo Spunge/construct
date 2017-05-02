@@ -23,9 +23,7 @@ Plant.prototype.update = function() {
 };
 
 Plant.prototype.init = function() {
-	return this
-		.update_translation()
-		.init_buffer();
+	return this.update_translation();
 };
 
 Plant.prototype.update_translation = function() {
@@ -33,26 +31,6 @@ Plant.prototype.update_translation = function() {
 		this.renderer.identity_matrix(),
 		this.renderer.scale_matrix(this.size, this.size),
 		this.renderer.translate_matrix(this.position.x - this.size / 2, this.position.y - this.size / 2)
-	);
-
-	return this;
-};
-
-Plant.prototype.init_buffer = function() {
-	this.buffer = this.renderer.gl.createBuffer();
-
-	this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER, this.buffer);
-	this.renderer.gl.bufferData(
-		this.renderer.gl.ARRAY_BUFFER,
-		new Float32Array([
-			0, 0,
-			1, 0,
-			0, 1,
-			0, 1,
-			1, 0,
-			1, 1
-		]),
-		this.renderer.gl.STATIC_DRAW
 	);
 
 	return this;
@@ -96,7 +74,6 @@ Plant.prototype.die = function() {
 Plant.prototype.render = function() {
 	this.renderer
 		.set_color('#00ff00')
-		.set_buffer(this.buffer)
 		.set_translation(this.translation)
 		.draw();
 };

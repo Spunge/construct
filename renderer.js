@@ -11,6 +11,13 @@ var Renderer = function(canvas_id) {
 };
 
 Renderer.prototype.init = function() {
+	return this
+		.init_program()
+		.init_buffer()
+		.set_buffer(this.buffer);
+};
+
+Renderer.prototype.init_program = function() {
 	// Get context
 	this.gl = this.canvas.getContext("webgl");
 
@@ -28,6 +35,26 @@ Renderer.prototype.init = function() {
 	// set the resolution
 	var resolutionLocation = this.gl.getUniformLocation(program, "u_resolution");
 	this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+
+	return this;
+};
+
+Renderer.prototype.init_buffer = function() {
+	this.buffer = this.gl.createBuffer();
+
+	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+	this.gl.bufferData(
+		this.gl.ARRAY_BUFFER,
+		new Float32Array([
+			0, 0,
+			1, 0,
+			0, 1,
+			0, 1,
+			1, 0,
+			1, 1
+		]),
+		this.gl.STATIC_DRAW
+	);
 
 	return this;
 };

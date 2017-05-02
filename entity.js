@@ -23,26 +23,6 @@ Entity.prototype.init = function() {
 	return this;
 };
 
-Entity.prototype.init_buffer = function() {
-	this.buffer = this.renderer.gl.createBuffer();
-
-	this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER, this.buffer);
-	this.renderer.gl.bufferData(
-		this.renderer.gl.ARRAY_BUFFER,
-		new Float32Array([
-			0, 0,
-			1, 0,
-			0, 1,
-			0, 1,
-			1, 0,
-			1, 1
-		]),
-		this.renderer.gl.STATIC_DRAW
-	);
-
-	return this;
-};
-
 Entity.prototype.update_translation = function() {
 	this.translation = this.renderer.multiply_matrices(
 		this.renderer.identity_matrix(),

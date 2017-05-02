@@ -11,6 +11,7 @@ Main.prototype.init = function(canvas_id) {
 	this.world = new World()
 		.set_renderer(this.renderer)
 		.set_size(800, 600)
+		.set_speed(20)
 		.init();
 	
 	this.camera = new Camera()
@@ -18,7 +19,8 @@ Main.prototype.init = function(canvas_id) {
 		.observe(this.world)
 		.init();
 
-	for(var i = 0; i < 1000; i++) {
+	/*
+	for(var i = 0; i < 100; i++) {
 		var animal = new Animal()
 			.set_renderer(this.renderer)
 			.set_world(this.world)
@@ -26,8 +28,8 @@ Main.prototype.init = function(canvas_id) {
 
 		this.world.add_entity(animal);
 	}
+	*/
 
-	/*
 	for(var i = 0; i < 1; i++) {
 		var position = {
 			x: this.world.width * Math.random(),
@@ -43,7 +45,6 @@ Main.prototype.init = function(canvas_id) {
 
 		this.world.add_entity(plant);
 	}
-	*/
 
 	return this;
 };

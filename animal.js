@@ -30,7 +30,6 @@ Animal.prototype.init = function() {
 
 	this.color = '#ff0000';
 
-	this.init_buffer();
 	this.update_translation();
 
 	return this;
@@ -98,7 +97,6 @@ Animal.prototype.collide_with_wall = function() {
 Animal.prototype.render = function() {
 	this.renderer
 		.set_color('#ff0000')
-		.set_buffer(this.buffer)
 		.set_translation(this.translation)
 		.draw();
 };
