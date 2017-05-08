@@ -1,6 +1,4 @@
 var Renderer = function(canvas_id) {
-	this.background = [0, 0, 0];
-
 	this.canvas = document.getElementById(canvas_id);
 	this.resize();
 
@@ -8,9 +6,7 @@ var Renderer = function(canvas_id) {
 		this.resize();
 		this.calculate_offset();
 	}.bind(this));
-};
 
-Renderer.prototype.init = function() {
 	return this
 		.init_program()
 		.init_buffer()
@@ -176,7 +172,7 @@ Renderer.prototype.hex_to_rgb = function(string) {
 
 Renderer.prototype.set_color = function(color) {
 	// Get color in RGB
-	color = this.hex_to_rgb(color || '#000000');
+	color = typeof(color) == 'string' ? this.hex_to_rgb(color) : color;
 
 	// Set color uniform
 	this.gl.uniform4f(this.color_location, color[0], color[1], color[2], 1);

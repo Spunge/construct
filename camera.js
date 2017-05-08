@@ -12,6 +12,7 @@ Camera.prototype.init = function() {
 Camera.prototype.observe = function(world) {
 	this.world = world;
 	this.zoom(0.8);
+	this.world.set_camera(this);
 
 	return this;
 }; 

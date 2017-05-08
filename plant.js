@@ -22,20 +22,6 @@ Plant.prototype.update = function() {
 	}
 };
 
-Plant.prototype.init = function() {
-	return this.update_translation();
-};
-
-Plant.prototype.update_translation = function() {
-	this.translation = this.renderer.multiply_matrices(
-		this.renderer.identity_matrix(),
-		this.renderer.scale_matrix(this.size, this.size),
-		this.renderer.translate_matrix(this.position.x - this.size / 2, this.position.y - this.size / 2)
-	);
-
-	return this;
-};
-
 Plant.prototype.create_offspring = function() {
 	for(var i = 0; i < this.offspring; i++) {
 		// Get random position to put offspring
@@ -51,8 +37,7 @@ Plant.prototype.create_offspring = function() {
 			.set_renderer(this.renderer)
 			.set_world(this.world)
 			.set_position(position)
-			.set_size(this.size / this.offspring)
-			.init();
+			.set_size(this.size / this.offspring);
 
 		// Add it to world
 		this.world.add_entity(plant);

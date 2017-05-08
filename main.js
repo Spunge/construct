@@ -5,31 +5,42 @@ var Main = function(canvas_id) {
 Main.prototype.init = function(canvas_id) {
 	this.paused = false;
 
-	this.renderer = new Renderer(canvas_id)
-		.init();
+	var surface = new Surface()
+		.set_point_size(10);
+
+	var tilemap = new Tilemap()
+		.set_tile_size(10);
 
 	this.world = new World()
-		.set_renderer(this.renderer)
+		.set_speed(1)
 		.set_size(800, 600)
-		.set_speed(20)
-		.init();
+		.add_tilemap(tilemap)
+		.set_surface(surface);
 	
+	this.renderer = new Renderer(canvas_id);
 	this.camera = new Camera()
 		.set_renderer(this.renderer)
-		.observe(this.world)
-		.init();
+		.observe(this.world);
 
 	/*
-	for(var i = 0; i < 100; i++) {
+	for(var i = 0; i < 1; i++) {
 		var animal = new Animal()
-			.set_renderer(this.renderer)
-			.set_world(this.world)
-			.init();
+			.set_size(Util.random(1, 20))
+			.set_position({
+				x: Util.random(0, this.world.width),
+				y: Util.random(0, this.world.height),
+			})
+			.set_velocity({
+				x: Util.random(-2, 2),
+				y: Util.random(-2, 2),
+			})
+			.set_color('#ff0000');
 
 		this.world.add_entity(animal);
 	}
 	*/
 
+	/*
 	for(var i = 0; i < 1; i++) {
 		var position = {
 			x: this.world.width * Math.random(),
@@ -37,14 +48,12 @@ Main.prototype.init = function(canvas_id) {
 		};
 
 		var plant = new Plant()
-			.set_renderer(this.renderer)
-			.set_world(this.world)
 			.set_position(position)
-			.set_size(10)
-			.init();
+			.set_size(10);
 
 		this.world.add_entity(plant);
 	}
+	*/
 
 	return this;
 };

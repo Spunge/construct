@@ -8,26 +8,17 @@ Entity.prototype.set_world = function(world) {
 	return this;
 };
 
-Entity.prototype.set_renderer = function(renderer) {
-	this.renderer = renderer;
-	return this;
-};
-
 Entity.prototype.update = function() {
 };
 
 Entity.prototype.render = function() {
 };
 
-Entity.prototype.init = function() {
-	return this;
-};
-
 Entity.prototype.update_translation = function() {
-	this.translation = this.renderer.multiply_matrices(
-		this.renderer.identity_matrix(),
-		this.renderer.scale_matrix(this.size, this.size),
-		this.renderer.translate_matrix(this.position.x - this.half_size, this.position.y - this.half_size)
+	this.translation = this.world.camera.renderer.multiply_matrices(
+		this.world.camera.renderer.identity_matrix(),
+		this.world.camera.renderer.scale_matrix(this.size, this.size),
+		this.world.camera.renderer.translate_matrix(this.position.x - this.half_size, this.position.y - this.half_size)
 	);
 
 	return this;
@@ -54,9 +45,12 @@ Entity.prototype.update_tilemap = function() {
 	return this;
 };
 
+/**
+ * Set position of entity
+ */
 Entity.prototype.set_position = function(position) {
-	this.position = position;
-
+	// Correct position to not be out of world
+	this.position = this.world.get_position_in_world(position);
 	return this;
 };
 

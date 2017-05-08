@@ -1,11 +1,6 @@
 var World = function() {
-	this.speed = 1;
-	this.tile_size = 20;
-};
-
-World.prototype.set_renderer = function(renderer) {
-	this.renderer = renderer;
-	return this;
+	this.tilemaps = [];
+	this.entities = [];
 };
 
 World.prototype.set_speed = function(speed) {
@@ -14,25 +9,43 @@ World.prototype.set_speed = function(speed) {
 };
 
 World.prototype.set_size = function(width, height) {
-	this.width = Math.ceil(width / this.tile_size) * this.tile_size;
-	this.height = Math.ceil(height / this.tile_size) * this.tile_size;
+	this.width = width;
+	this.height = height;
 	return this;
 };
 
-World.prototype.init = function() {
-	this.tilemap = new Tilemap()
-		.set_renderer(this.renderer)
+World.prototype.get_position_in_world = function(position) {
+	return {
+		x: ((position.x % this.width) + this.width) % this.width,
+		y: ((position.y % this.height) + this.height) % this.height,
+	}
+};
+
+World.prototype.set_camera = function(camera) {
+	this.camera = camera;
+	return this;
+};
+
+World.prototype.set_surface = function(surface) {
+	this.surface = surface;
+	surface
 		.set_world(this)
-		.set_tile_size(this.tile_size)
 		.init();
-
-	this.entities = [];
-
 	return this;
 };
+
+World.prototype.add_tilemap = function(tilemap) {
+	this.tilemaps.push(tilemap);
+	tilemap
+		.set_world(this)
+		.init();
+	return this;
+}
 
 World.prototype.add_entity = function(entity) {
 	this.entities.push(entity);
+	entity.set_world(this);
+	return this;
 };
 
 World.prototype.remove_entity = function(entity) {
@@ -46,7 +59,13 @@ World.prototype.update = function() {
 };
 
 World.prototype.render = function() {
-	this.tilemap.render();
+	if(this.surface) {
+		this.surface.render();
+	}
+
+	for(var i = 0; i < this.tilemaps.length; i++) {
+		this.tilemaps[i].render();
+	}
 
 	for(var i = 0; i < this.entities.length; i++) {
 		this.entities[i].render();
